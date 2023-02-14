@@ -1,22 +1,27 @@
-pwd
-echo -e "\e[36m \e[5mUPDATE SYSTEM \e[25m"
 echo -e "\e[37m"
+echo -e "\e[36m \e[5mUPDATE SYSTEM \e[25m\e[37m"
 sudo apt-get update
-echo -e "\e[36m \e[5mINSTALLING NECESSARY COMMANDS \e[25m"
 echo -e "\e[37m"
+echo -e "\e[36m \e[5mINSTALLING NECESSARY COMMANDS \e[25m\e[37m"
 echo -e "\e[32m PIP COMMAND \e[37m"
 sudo apt install python3-pip
 echo -e "\e[32m WGET COMMAND \e[37m"
 sudo apt install wget
 echo -e "\e[32m UNZIP COMMAND \e[37m"
 sudo apt install unzip
-echo -e "\e[36m \e[5mDOWNLOADING PACKAGES \e[25m"
+echo -e "\e[32m SED COMMAND \e[37m"
+sudo apt install sed
+echo -e "\e[32m SOURCE COMMAND \e[37m"
+sudo apt install source
 echo -e "\e[37m"
+echo -e "\e[36m \e[5mDOWNLOADING PACKAGES \e[25m\e[37m"
 wget https://github.com/huashengdun/webssh/archive/refs/heads/master.zip
 unzip master.zip
-echo -e "\e[36m \e[5mINSTALLING PACKAGES \e[25m"
 echo -e "\e[37m"
+echo -e "\e[36m \e[5mINSTALLING PACKAGES \e[25m\e[37m"
+echo -e "\e[32m INSTALL WEBSSH \e[37m"
 pip install webssh
+echo -e "\e[32m Done! \e[37m"
 cd /home/rayan/.local/lib/python3.10/site-packages/webssh/templates
 echo -e "\e[36m \e[5mREMOVE CURRENT HTML FILE \e[25m"
 echo -e "\e[37m"
