@@ -22,9 +22,18 @@ echo -e "\e[36m \e[5mINSTALLING PACKAGES \e[25m\e[37m"
 echo -e "\e[32m INSTALL WEBSSH \e[37m"
 pip install webssh
 echo -e "\e[32m Done! \e[37m"
-cd /home/rayan/.local/lib/python3.10/site-packages/webssh/templates
-echo -e "\e[36m \e[5mREMOVE CURRENT HTML FILE \e[25m"
+echo -e "\e[32m LOCATING INSTALLATION PATH \e[37m"
+pip show webssh > installation-path.sh
+sed -i '1,7d;9d;$d' installation-path.sh
+echo -e "\e[32m Done! \e[37m"
+echo -e "\e[32m MAKING AN ENVIRONMENT PATH \e[37m"
+sed -i 's/Location: /export PIPATH=/g' installation-path.sh
+sudo chmod a+x installation-path.sh
+source installation-path.sh
+cd $PIPATH/webssh/templates
+echo -e "\e[32m Done! \e[37m"
 echo -e "\e[37m"
+echo -e "\e[36m \e[5mREMOVE CURRENT HTML FILE \e[25m\e[37m"
 rm index.html
 echo "index.html has been removed"
 echo -e "\e[36m \e[5mCREATE NEW HTML FILE \e[25m"
