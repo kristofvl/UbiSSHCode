@@ -93,7 +93,7 @@ echo         "</div>" >> index.html
 echo         "<div class=\"row\">" >> index.html
 echo           "<div class=\"col\">" >> index.html
 echo             "<label for=\"Username\">Username</label>" >> index.html
-echo             "<input class=\"form-control\" type=\"text\" id=\"username\" name=\"username\" placeholder=\"st$MYDATE\_\"value=\"st$MYDATE\_\" required>" >> index.html
+echo             "<input class=\"form-control\" type=\"text\" id=\"username\" name=\"username\" placeholder=\"st$MYDATE\"value=\"st$MYDATE\" required>" >> index.html
 echo           "</div>" >> index.html
 echo           "<div class=\"col\">" >> index.html
 echo             "<label for=\"Password\">Password</label>" >> index.html
