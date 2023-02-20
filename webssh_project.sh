@@ -14,6 +14,10 @@ sudo apt install sed
 echo -e "\e[32m SOURCE COMMAND \e[37m"
 sudo apt install source
 echo -e "\e[37m"
+echo -e "\e[36m \e[5mINSTALLING SHELL VARIABLES \e[25m\e[37m"
+MYDATE=$(date +%Y)
+echo current 4-digit command is set to MYDATE
+echo -e "\e[37m"
 echo -e "\e[36m \e[5mDOWNLOADING PACKAGES \e[25m\e[37m"
 wget https://github.com/huashengdun/webssh/archive/refs/heads/master.zip
 unzip master.zip
