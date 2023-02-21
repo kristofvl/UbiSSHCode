@@ -87,7 +87,7 @@ echo       "<form id=\"connect\" action=\"\" method=\"post\" enctype=\"multipart
 echo         "<div class=\"row\">" >> index.html
 echo           "<div class=\"col\">" >> index.html
 echo             "<label for=\"Hostname\">Hostname</label>" >> index.html
-echo             "<input class=\"form-control\" type=\"text\" id=\"hostname\" name=\"hostname\" placeholder=\"$HOSTNAME\" value=\"$HOSTNAME\" required>" >> index.html
+echo             "<input class=\"form-control\" type=\"text\" id=\"hostname\" name=\"hostname\" placeholder=\"$HOSTNAME\" value=\"$HOSTNAME\" readonly>" >> index.html
 echo           "</div>" >> index.html
 echo         "</div>" >> index.html
 echo         "<div class=\"row\">" >> index.html
