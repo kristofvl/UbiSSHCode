@@ -36,6 +36,7 @@ echo -e "\e[32m MAKING AN ENVIRONMENT PATH \e[37m"
 sed -i 's/Location: /export PIPATH=/g' installation-path.sh
 sudo chmod a+x installation-path.sh
 source installation-path.sh
+rm installation-path.sh
 cd $PIPATH/webssh/templates
 echo -e "\e[32m Done! \e[37m"
 echo -e "\e[37m"
