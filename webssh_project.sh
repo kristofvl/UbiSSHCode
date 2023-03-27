@@ -29,7 +29,7 @@ pip install webssh
 rm -r webssh-master
 echo -e "\e[32m Done! \e[37m"
 echo -e "\e[32m LOCATING INSTALLATION PATH \e[37m"
-pip show webssh > installation-path.sh
+python3 -m pip show webssh > installation-path.sh
 sed -i '1,7d;9d;$d' installation-path.sh
 echo -e "\e[32m Done! \e[37m"
 echo -e "\e[32m MAKING AN ENVIRONMENT PATH \e[37m"
