@@ -122,3 +122,8 @@ echo     "<script src=\"static/js/xterm-addon-fit.min.js\"></script>" >> index.h
 echo     "<script src=\"static/js/main.js\"></script>" >> index.html
 echo   "</body>" >> index.html
 echo "</html>" >> index.html
+echo -e "\e[37m"
+echo -e "\e[36m \e[5mCOPY WSSH EXECUTABLE FROM ~/.local/bin TO /usr/local/bin \e[25m\e[37m"
+cd ~/.local/bin
+sudo cp wssh /usr/local/bin
+sudo cp wsshd /usr/local/bin
