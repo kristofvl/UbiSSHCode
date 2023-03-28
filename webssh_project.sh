@@ -21,7 +21,7 @@ echo -e "\e[37m"
 echo -e "\e[36m \e[5mDOWNLOADING PACKAGES \e[25m\e[37m"
 wget https://github.com/huashengdun/webssh/archive/refs/heads/master.zip
 unzip master.zip
-rm master.zip
+rm -r master.zip
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mINSTALLING PACKAGES \e[25m\e[37m"
 echo -e "\e[32m INSTALL WEBSSH \e[37m"
