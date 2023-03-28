@@ -16,11 +16,11 @@ sudo apt install source
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mINSTALLING SHELL VARIABLES \e[25m\e[37m"
 MYDATE=$(date +%Y)_
-echo current 4-digit-year command is set to MYDATE
+echo "current 4-digit-year command is set to MYDATE"
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mDOWNLOADING PACKAGES \e[25m\e[37m"
-wget https://github.com/huashengdun/webssh/archive/refs/heads/master.zip
-unzip master.zip
+sudo wget https://github.com/huashengdun/webssh/archive/refs/heads/master.zip
+sudo unzip master.zip
 sudo rm -r master.zip
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mINSTALLING PACKAGES \e[25m\e[37m"
