@@ -25,7 +25,7 @@ rm -r master.zip
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mINSTALLING PACKAGES \e[25m\e[37m"
 echo -e "\e[32m INSTALL WEBSSH \e[37m"
-pip install webssh
+sudo pip install webssh
 rm -r webssh-master
 echo -e "\e[32m Done! \e[37m"
 echo -e "\e[32m LOCATING INSTALLATION PATH \e[37m"
