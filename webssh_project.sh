@@ -129,3 +129,4 @@ sudo cp wssh /usr/local/bin
 sudo cp wsshd /usr/local/bin
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mCreating an Alias Command (wsshusi) for our wssh key and cert file \e[25m\e[37m"
+alias wsshusi='sudo wssh --certfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/cert.pem --keyfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/privkey.pem --sslport=8888 --port=4433'
