@@ -134,7 +134,7 @@ echo -e "\e[37m"
 echo -e "\e[36m \e[5mMaking startup file \e[25m\e[37m"
 cd $PIPATH/webssh
 echo "path changed to installed destination of webssh"
-touch startup-run.sh
+sudo touch startup-run.sh
 echo ".sh file created"
 echo "writing to .sh file"
 echo "sudo wssh --certfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/cert.pem --keyfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/privkey.pem --sslport=8888 --port=4433" > startup-run.sh
