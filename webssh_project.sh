@@ -127,3 +127,5 @@ echo -e "\e[36m \e[5mCOPY WSSH EXECUTABLE FROM ~/.local/bin TO /usr/local/bin \e
 cd ~/.local/bin
 sudo cp wssh /usr/local/bin
 sudo cp wsshd /usr/local/bin
+echo -e "\e[37m"
+echo -e "\e[36m \e[5mCreating an Alias Command (wsshusi) for our wssh key and cert file \e[25m\e[37m"
