@@ -137,7 +137,7 @@ echo "path changed to installed destination of webssh"
 touch startup-run.sh
 echo ".sh file created"
 echo "writing to .sh file"
-echo "sudo wssh" >> startup-run.sh
+echo "sudo wssh --certfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/cert.pem --keyfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/privkey.pem --sslport=8888 --port=4433" > startup-run.sh
 echo "done!"
 echo "Making file executable:"
 sudo chmod a+x startup-run.sh
