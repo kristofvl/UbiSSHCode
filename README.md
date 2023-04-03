@@ -30,4 +30,4 @@ Ubiquitous SSH Code Server
   
   3-to check the status of webssh daemon type: /etc/init.d/startup-run.sh status
   
-  4-to run the script o startup type: update-rc.d startup-run.sh start 20 3 4 5
+  4-to run the script o startup type: sudo update-rc.d startup-run.sh defaults
