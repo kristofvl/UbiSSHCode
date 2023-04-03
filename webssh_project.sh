@@ -165,7 +165,7 @@ sudo echo "# chkconfig: 2345 20 80"					| sudo tee -a startup-run.sh
 sudo echo "# description: Description comes here...."			| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
 sudo echo "# Source function library."					| sudo tee -a startup-run.sh
-sudo echo ". /etc/init.d/functions"					| sudo tee -a startup-run.sh
+sudo echo "#. /etc/init.d/functions"					| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
 sudo echo "start() {"							| sudo tee -a startup-run.sh
 sudo echo "    # code to start app comes here"				| sudo tee -a startup-run.sh 
