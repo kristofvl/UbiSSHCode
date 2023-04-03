@@ -168,7 +168,7 @@ sudo echo ". /etc/init.d/functions"					| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
 sudo echo "start() {"							| sudo tee -a startup-run.sh
 sudo echo "    # code to start app comes here"				| sudo tee -a startup-run.sh 
-sudo echo "	sudo wssh"						| sudo tee -a startup-run.sh
+sudo echo "	sudo daemon wssh"						| sudo tee -a startup-run.sh
 sudo echo "    # example: daemon program_name &"			| sudo tee -a startup-run.sh
 sudo echo "}"								| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
