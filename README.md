@@ -23,7 +23,11 @@ Ubiquitous SSH Code Server
     @reboot sh $PIPATH/webssh/startup-run.sh
    
 * Daemon control
-  to start webssh daemon type /etc/init.d/startup-run.sh start
-  to stop webssh daemon type /etc/init.d/startup-run.sh stop
-  to check the status of webssh daemon type /etc/init.d/startup-run.sh status
-  to
+
+  1-to start webssh daemon type /etc/init.d/startup-run.sh start
+  
+  2-to stop webssh daemon type /etc/init.d/startup-run.sh stop
+  
+  3-to check the status of webssh daemon type /etc/init.d/startup-run.sh status
+  
+  4-to
