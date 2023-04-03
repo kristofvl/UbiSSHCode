@@ -156,10 +156,11 @@ echo -e "\e[37m"
 echo -e "\e[36m \e[5mMaking startup file \e[25m\e[37m"
 cd /etc/init.d/
 echo "path changed to /etc/init.d/"
+sudo rm -r startup-run.sh
 sudo touch startup-run.sh
 echo "startup-run.sh file created"
 echo "writing to startup-run.sh file"
-sudo echo "#""!""/bin/bash"						| sudo tee startup-run.sh
+sudo echo "#""!""/bin/bash"						| sudo tee -a startup-run.sh
 sudo echo "# chkconfig: 2345 20 80"					| sudo tee -a startup-run.sh
 sudo echo "# description: Description comes here...."			| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
