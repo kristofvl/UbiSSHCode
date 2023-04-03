@@ -175,7 +175,7 @@ sudo echo ""								| sudo tee -a startup-run.sh
 sudo echo "stop() {"							| sudo tee -a startup-run.sh
 sudo echo "    # code to stop app comes here" 				| sudo tee -a startup-run.sh
 sudo echo "    # example: killproc program_name"			| sudo tee -a startup-run.sh
-sudo echo "    sudo pkill wssh			| sudo tee -a startup-run.sh
+sudo echo "    sudo pkill wssh"			| sudo tee -a startup-run.sh
 sudo echo "}"								| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
 sudo echo "case \"\$1\" in" 						| sudo tee -a startup-run.sh
