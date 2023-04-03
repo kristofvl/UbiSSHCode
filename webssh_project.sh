@@ -15,6 +15,8 @@ echo -e "\e[32m UNZIP COMMAND \e[37m"
 sudo apt install unzip
 echo -e "\e[32m SED COMMAND \e[37m"
 sudo apt install sed
+echo -e "\e[32m DAEMON COMMAND \e[37m"
+sudo apt install daemon
 echo -e "\e[32m SOURCE COMMAND \e[37m"
 sudo apt install source
 echo "FINISHED, SCROLL UP TO SEE IF THERE IS AN ERROR ON THE PROCESS"
