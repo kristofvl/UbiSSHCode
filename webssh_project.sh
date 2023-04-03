@@ -136,10 +136,13 @@ sudo echo "    <script src=\"static/js/main.js\"></script>"                     
 sudo echo "  </body>"                                                           | sudo tee -a index.html
 sudo echo "</html>"                                                             | sudo tee -a index.html
 
+#Writing an alias command to run Uni-Siegen Server with the specific cert and key file with the shortcut command (wsshusi)
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mCreating an Alias Command (wsshusi) for our wssh key and cert file \e[25m\e[37m"
 alias wsshusi='sudo wssh --certfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/cert.pem --keyfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/privkey.pem --sslport=8888 --port=4433'
 echo "Specific Command to run Uni-Siegen Web SSH Server is: wsshusi"
+
+#Make an startup file in init.d and write to it
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mMaking startup file \e[25m\e[37m"
 cd /etc/init.d/
@@ -147,9 +150,6 @@ echo "path changed to /etc/init.d/"
 sudo touch startup-run.sh
 echo "startup-run.sh file created"
 echo "writing to startup-run.sh file"
-
-
-#Writing to startup-run.sh file in init.d
 sudo echo "#""!""/bin/bash"						| sudo tee -a startup-run.sh
 sudo echo "# chkconfig: 2345 20 80"					| sudo tee -a startup-run.sh
 sudo echo "# description: Description comes here...."			| sudo tee -a startup-run.sh
