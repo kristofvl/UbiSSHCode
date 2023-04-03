@@ -191,7 +191,7 @@ sudo echo "       start"						| sudo tee -a startup-run.sh
 sudo echo "       ;;"							| sudo tee -a startup-run.sh
 sudo echo "    status)"							| sudo tee -a startup-run.sh
 sudo echo "       # code to check status of app comes here" 		| sudo tee -a startup-run.sh
-sudo echo "       # example: status program_name"			| sudo tee -a startup-run.sh
+sudo echo "       sudo ps aux | grep -i wssh"			| sudo tee -a startup-run.sh
 sudo echo "       ;;"							| sudo tee -a startup-run.sh
 sudo echo "    *)"							| sudo tee -a startup-run.sh
 sudo echo "       echo \"Usage: \$0 {start|stop|status|restart}\""	| sudo tee -a startup-run.sh
