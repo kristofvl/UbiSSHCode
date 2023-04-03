@@ -149,12 +149,50 @@ echo "startup-run.sh file created"
 echo "writing to startup-run.sh file"
 
 
+#Writing to startup-run.sh file in init.d
+sudo echo "#""!""/bin/bash"						| sudo tee -a startup-run.sh
+sudo echo "# chkconfig: 2345 20 80"					| sudo tee -a startup-run.sh
+sudo echo "# description: Description comes here...."			| sudo tee -a startup-run.sh
+sudo echo ""								| sudo tee -a startup-run.sh
+sudo echo "# Source function library."					| sudo tee -a startup-run.sh
+sudo echo ". /etc/init.d/functions"					| sudo tee -a startup-run.sh
+sudo echo ""								| sudo tee -a startup-run.sh
+sudo echo "start() {"							| sudo tee -a startup-run.sh
+sudo echo "    # code to start app comes here"				| sudo tee -a startup-run.sh 
+sudo echo "	sudo wssh"						| sudo tee -a startup-run.sh
+sudo echo "    # example: daemon program_name &"			| sudo tee -a startup-run.sh
+sudo echo "}"								| sudo tee -a startup-run.sh
+sudo echo ""								| sudo tee -a startup-run.sh
+sudo echo "stop() {"							| sudo tee -a startup-run.sh
+sudo echo "    # code to stop app comes here" 				| sudo tee -a startup-run.sh
+sudo echo "    # example: killproc program_name"			| sudo tee -a startup-run.sh
+sudo echo "}"								| sudo tee -a startup-run.sh
+sudo echo ""								| sudo tee -a startup-run.sh
+sudo echo "case \"\$1\" in" 						| sudo tee -a startup-run.sh
+sudo echo "    start)"							| sudo tee -a startup-run.sh
+sudo echo "       start"						| sudo tee -a startup-run.sh
+sudo echo "       ;;"							| sudo tee -a startup-run.sh
+sudo echo "    stop)"							| sudo tee -a startup-run.sh
+sudo echo "       stop"							| sudo tee -a startup-run.sh
+sudo echo "       ;;"							| sudo tee -a startup-run.sh
+sudo echo "    restart)"						| sudo tee -a startup-run.sh
+sudo echo "       stop"							| sudo tee -a startup-run.sh
+sudo echo "       start"						| sudo tee -a startup-run.sh
+sudo echo "       ;;"							| sudo tee -a startup-run.sh
+sudo echo "    status)"							| sudo tee -a startup-run.sh
+sudo echo "       # code to check status of app comes here" 		| sudo tee -a startup-run.sh
+sudo echo "       # example: status program_name"			| sudo tee -a startup-run.sh
+sudo echo "       ;;"							| sudo tee -a startup-run.sh
+sudo echo "    *)"							| sudo tee -a startup-run.sh
+sudo echo "       echo \"Usage: \$0 {start|stop|status|restart}\""	| sudo tee -a startup-run.sh
+sudo echo "esac"							| sudo tee -a startup-run.sh
+sudo echo ""								| sudo tee -a startup-run.sh
+sudo echo "exit 0" 							| sudo tee -a startup-run.sh
 
 
 
 
-
-sudo echo "sudo wssh --certfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/cert.pem --keyfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/privkey.pem --sslport=8888 --port=4433" | sudo tee startup-run.sh
+sudo echo "sudo wssh --certfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/cert.pem --keyfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/privkey.pem --sslport=8888 --port=4433" | sudo tee -a startup-run.sh
 echo "done!"
 echo "Making file executable:"
 sudo chmod a+x startup-run.sh
