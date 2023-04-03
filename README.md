@@ -24,10 +24,10 @@ Ubiquitous SSH Code Server
    
 * Daemon control
 
-  1-to start webssh daemon type /etc/init.d/startup-run.sh start
+  1-to start webssh daemon type: /etc/init.d/startup-run.sh start
   
-  2-to stop webssh daemon type /etc/init.d/startup-run.sh stop
+  2-to stop webssh daemon type: /etc/init.d/startup-run.sh stop
   
-  3-to check the status of webssh daemon type /etc/init.d/startup-run.sh status
+  3-to check the status of webssh daemon type: /etc/init.d/startup-run.sh status
   
-  4-to
+  4-to run the script o startup type: update-rc.d startup-run.sh start 20 3 4 5
