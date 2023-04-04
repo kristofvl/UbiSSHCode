@@ -160,12 +160,19 @@ sudo rm -r startup-run.sh
 sudo touch startup-run.sh
 echo "startup-run.sh file created"
 echo "writing to startup-run.sh file"
-sudo echo "#""!""/bin/bash"						| sudo tee -a startup-run.sh
-sudo echo "# chkconfig: 2345 20 80"					| sudo tee -a startup-run.sh
-sudo echo "# description: Description comes here...."			| sudo tee -a startup-run.sh
+sudo echo "#""!""/bin/sh"						| sudo tee -a startup-run.sh
+sudo echo "### BEGIN INIT INFO"					| sudo tee -a startup-run.sh
+sudo echo "# Provides:          WSSH for Uni-Siegen"					| sudo tee -a startup-run.sh
+sudo echo "# Required-Start:"					| sudo tee -a startup-run.sh
+sudo echo "# Required-Stop:"					| sudo tee -a startup-run.sh
+sudo echo "# Default-Start:     2 3 4 5"					| sudo tee -a startup-run.sh
+sudo echo "# Default-Stop:"					| sudo tee -a startup-run.sh
+sudo echo "# Short-Description: On Startup, the webssh server must run"					| sudo tee -a startup-run.sh
+sudo echo "# Description: On Startup, the webssh server must run"					| sudo tee -a startup-run.sh
+sudo echo "### END INIT INFO"					| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
-sudo echo "# Source function library."					| sudo tee -a startup-run.sh
-sudo echo ". /etc/init.d/init-functions"					| sudo tee -a startup-run.sh
+sudo echo "PATH=/sbin:/usr/sbin:/bin:/usr/bin"					| sudo tee -a startup-run.sh
+sudo echo ". /lib/lsb/init-functions"					| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
 sudo echo "start() {"							| sudo tee -a startup-run.sh
 sudo echo "    # code to start app comes here"				| sudo tee -a startup-run.sh 
@@ -196,6 +203,7 @@ sudo echo "       sudo ps aux | grep -i wssh"			| sudo tee -a startup-run.sh
 sudo echo "       ;;"							| sudo tee -a startup-run.sh
 sudo echo "    *)"							| sudo tee -a startup-run.sh
 sudo echo "       echo \"Usage: \$0 {start|stop|status|restart}\""	| sudo tee -a startup-run.sh
+sudo echo "       exit 3"	| sudo tee -a startup-run.sh
 sudo echo "esac"							| sudo tee -a startup-run.sh
 sudo echo ""								| sudo tee -a startup-run.sh
 sudo echo "exit 0" 							| sudo tee -a startup-run.sh
