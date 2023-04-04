@@ -11,7 +11,7 @@ Ubiquitous SSH Code Server
 * execute the script: 
 > bash ./webssh_project.sh 
 
-* command to run the server is wsshusi
+* command to run the https server with specified cert and key file is wsshusi
 
 * to make the server run at startup: (this method didnt work in my PC)
 
