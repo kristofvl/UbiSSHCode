@@ -40,7 +40,7 @@ echo "FINISHED, SCROLL UP TO SEE IF THERE IS AN ERROR ON THE PROCESS"
 echo -e "\e[37m"
 echo -e "\e[36m \e[5mINSTALLING PACKAGES \e[25m\e[37m"
 echo -e "\e[32m INSTALL WEBSSH \e[37m"
-sudo pip install webssh
+sudo python3 -m pip install webssh
 sudo rm -r webssh-master
 echo "FINISHED, SCROLL UP TO SEE IF THERE IS AN ERROR ON THE PROCESS"
 
