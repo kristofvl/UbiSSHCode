@@ -171,8 +171,8 @@ sudo echo "# Short-Description: On Startup, the wessh server must run"					| sud
 sudo echo "# Description: On Startup, the wessh server must run"					| sudo tee -a wessh
 sudo echo "### END INIT INFO"					| sudo tee -a wessh
 sudo echo ""								| sudo tee -a wessh
-sudo echo "PATH=/sbin:/usr/sbin:/bin:/usr/bin"					| sudo tee -a wessh
-sudo echo ". /lib/lsb/init-functions"					| sudo tee -a wessh
+sudo echo "#PATH=/sbin:/usr/sbin:/bin:/usr/bin"					| sudo tee -a wessh
+sudo echo "#. /lib/lsb/init-functions"					| sudo tee -a wessh
 sudo echo ""								| sudo tee -a wessh
 sudo echo "start() {"							| sudo tee -a wessh
 sudo echo "    # code to start app comes here"				| sudo tee -a wessh 
@@ -202,8 +202,8 @@ sudo echo "       # code to check status of app comes here" 		| sudo tee -a wess
 sudo echo "       sudo ps aux | grep -i wssh"			| sudo tee -a wessh
 sudo echo "       ;;"							| sudo tee -a wessh
 sudo echo "    *)"							| sudo tee -a wessh
-sudo echo "       echo \"Usage: \$0 {start|stop|status|restart}\""	| sudo tee -a wessh
-sudo echo "       exit 3"	| sudo tee -a wessh
+sudo echo "       #echo \"Usage: \$0 {start|stop|status|restart}\""	| sudo tee -a wessh
+sudo echo "       #exit 3"	| sudo tee -a wessh
 sudo echo "esac"							| sudo tee -a wessh
 sudo echo ""								| sudo tee -a wessh
 sudo echo "exit 0" 							| sudo tee -a wessh
