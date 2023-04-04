@@ -211,8 +211,3 @@ echo "FINISHED, SCROLL UP TO SEE IF THERE IS AN ERROR ON THE PROCESS"
 echo "Making file executable:"
 sudo chmod a+x webssh
 echo "done!"
-
-#sudo echo "sudo wssh --certfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/cert.pem --keyfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/privkey.pem --sslport=8888 --port=4433" | sudo tee -a webssh
-
-
-
