@@ -156,58 +156,58 @@ echo -e "\e[37m"
 echo -e "\e[36m \e[5mMaking startup file \e[25m\e[37m"
 cd /etc/init.d/
 echo "path changed to /etc/init.d/"
-sudo rm -r webssh
-sudo touch webssh
-echo "webssh file created"
-echo "writing to webssh file"
-sudo echo "#""!""/bin/sh"						| sudo tee -a webssh
-sudo echo "### BEGIN INIT INFO"					| sudo tee -a webssh
-sudo echo "# Provides:          WSSH for Uni-Siegen"					| sudo tee -a webssh
-sudo echo "# Required-Start:"					| sudo tee -a webssh
-sudo echo "# Required-Stop:"					| sudo tee -a webssh
-sudo echo "# Default-Start:     2 3 4 5"					| sudo tee -a webssh
-sudo echo "# Default-Stop:"					| sudo tee -a webssh
-sudo echo "# Short-Description: On Startup, the webssh server must run"					| sudo tee -a webssh
-sudo echo "# Description: On Startup, the webssh server must run"					| sudo tee -a webssh
-sudo echo "### END INIT INFO"					| sudo tee -a webssh
-sudo echo ""								| sudo tee -a webssh
-sudo echo "PATH=/sbin:/usr/sbin:/bin:/usr/bin"					| sudo tee -a webssh
-sudo echo ". /lib/lsb/init-functions"					| sudo tee -a webssh
-sudo echo ""								| sudo tee -a webssh
-sudo echo "start() {"							| sudo tee -a webssh
-sudo echo "    # code to start app comes here"				| sudo tee -a webssh 
-sudo echo "	sudo daemon wssh"						| sudo tee -a webssh
-sudo echo "    # example: daemon program_name &"			| sudo tee -a webssh
-sudo echo "}"								| sudo tee -a webssh
-sudo echo ""								| sudo tee -a webssh
-sudo echo "stop() {"							| sudo tee -a webssh
-sudo echo "    # code to stop app comes here" 				| sudo tee -a webssh
-sudo echo "    # example: killproc program_name"			| sudo tee -a webssh
-sudo echo "    sudo pkill wssh"			| sudo tee -a webssh
-sudo echo "}"								| sudo tee -a webssh
-sudo echo ""								| sudo tee -a webssh
-sudo echo "case \"\$1\" in" 						| sudo tee -a webssh
-sudo echo "    start)"							| sudo tee -a webssh
-sudo echo "       start"						| sudo tee -a webssh
-sudo echo "       ;;"							| sudo tee -a webssh
-sudo echo "    stop)"							| sudo tee -a webssh
-sudo echo "       stop"							| sudo tee -a webssh
-sudo echo "       ;;"							| sudo tee -a webssh
-sudo echo "    restart)"						| sudo tee -a webssh
-sudo echo "       stop"							| sudo tee -a webssh
-sudo echo "       start"						| sudo tee -a webssh
-sudo echo "       ;;"							| sudo tee -a webssh
-sudo echo "    status)"							| sudo tee -a webssh
-sudo echo "       # code to check status of app comes here" 		| sudo tee -a webssh
-sudo echo "       sudo ps aux | grep -i wssh"			| sudo tee -a webssh
-sudo echo "       ;;"							| sudo tee -a webssh
-sudo echo "    *)"							| sudo tee -a webssh
-sudo echo "       echo \"Usage: \$0 {start|stop|status|restart}\""	| sudo tee -a webssh
-sudo echo "       exit 3"	| sudo tee -a webssh
-sudo echo "esac"							| sudo tee -a webssh
-sudo echo ""								| sudo tee -a webssh
-sudo echo "exit 0" 							| sudo tee -a webssh
+sudo rm -r wessh
+sudo touch wessh
+echo "wessh file created"
+echo "writing to wessh file"
+sudo echo "#""!""/bin/sh"						| sudo tee -a wessh
+sudo echo "### BEGIN INIT INFO"					| sudo tee -a wessh
+sudo echo "# Provides:          WSSH for Uni-Siegen"					| sudo tee -a wessh
+sudo echo "# Required-Start:"					| sudo tee -a wessh
+sudo echo "# Required-Stop:"					| sudo tee -a wessh
+sudo echo "# Default-Start:     2 3 4 5"					| sudo tee -a wessh
+sudo echo "# Default-Stop:"					| sudo tee -a wessh
+sudo echo "# Short-Description: On Startup, the wessh server must run"					| sudo tee -a wessh
+sudo echo "# Description: On Startup, the wessh server must run"					| sudo tee -a wessh
+sudo echo "### END INIT INFO"					| sudo tee -a wessh
+sudo echo ""								| sudo tee -a wessh
+sudo echo "PATH=/sbin:/usr/sbin:/bin:/usr/bin"					| sudo tee -a wessh
+sudo echo ". /lib/lsb/init-functions"					| sudo tee -a wessh
+sudo echo ""								| sudo tee -a wessh
+sudo echo "start() {"							| sudo tee -a wessh
+sudo echo "    # code to start app comes here"				| sudo tee -a wessh 
+sudo echo "	sudo daemon wssh"						| sudo tee -a wessh
+sudo echo "    # example: daemon program_name &"			| sudo tee -a wessh
+sudo echo "}"								| sudo tee -a wessh
+sudo echo ""								| sudo tee -a wessh
+sudo echo "stop() {"							| sudo tee -a wessh
+sudo echo "    # code to stop app comes here" 				| sudo tee -a wessh
+sudo echo "    # example: killproc program_name"			| sudo tee -a wessh
+sudo echo "    sudo pkill wssh"			| sudo tee -a wessh
+sudo echo "}"								| sudo tee -a wessh
+sudo echo ""								| sudo tee -a wessh
+sudo echo "case \"\$1\" in" 						| sudo tee -a wessh
+sudo echo "    start)"							| sudo tee -a wessh
+sudo echo "       start"						| sudo tee -a wessh
+sudo echo "       ;;"							| sudo tee -a wessh
+sudo echo "    stop)"							| sudo tee -a wessh
+sudo echo "       stop"							| sudo tee -a wessh
+sudo echo "       ;;"							| sudo tee -a wessh
+sudo echo "    restart)"						| sudo tee -a wessh
+sudo echo "       stop"							| sudo tee -a wessh
+sudo echo "       start"						| sudo tee -a wessh
+sudo echo "       ;;"							| sudo tee -a wessh
+sudo echo "    status)"							| sudo tee -a wessh
+sudo echo "       # code to check status of app comes here" 		| sudo tee -a wessh
+sudo echo "       sudo ps aux | grep -i wssh"			| sudo tee -a wessh
+sudo echo "       ;;"							| sudo tee -a wessh
+sudo echo "    *)"							| sudo tee -a wessh
+sudo echo "       echo \"Usage: \$0 {start|stop|status|restart}\""	| sudo tee -a wessh
+sudo echo "       exit 3"	| sudo tee -a wessh
+sudo echo "esac"							| sudo tee -a wessh
+sudo echo ""								| sudo tee -a wessh
+sudo echo "exit 0" 							| sudo tee -a wessh
 echo "FINISHED, SCROLL UP TO SEE IF THERE IS AN ERROR ON THE PROCESS"
 echo "Making file executable:"
-sudo chmod a+x webssh
+sudo chmod a+x wessh
 echo "done!"
