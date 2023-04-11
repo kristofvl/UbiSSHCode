@@ -17,8 +17,6 @@ echo -e "\e[32m SED COMMAND \e[37m"
 sudo apt install sed
 echo -e "\e[32m DAEMON COMMAND \e[37m"
 sudo apt install daemon
-echo -e "\e[32m SOURCE COMMAND \e[37m"
-sudo apt install source
 echo "FINISHED, SCROLL UP TO SEE IF THERE IS AN ERROR ON THE PROCESS"
 
 #Adds the current date to a shell variable, further to be used in index.html:
