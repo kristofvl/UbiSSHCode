@@ -174,7 +174,7 @@ sudo echo "#. /lib/lsb/init-functions"					| sudo tee -a wessh
 sudo echo ""								| sudo tee -a wessh
 sudo echo "start() {"							| sudo tee -a wessh
 sudo echo "    # code to start app comes here"				| sudo tee -a wessh 
-sudo echo "	sudo daemon wssh"						| sudo tee -a wessh
+sudo echo "	sudo daemon wssh --certfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/cert.pem --keyfile=/etc/letsencrypt/live/ubi21.informatik.uni-siegen.de/privkey.pem --sslport=8888 --port=4433"						| sudo tee -a wessh
 sudo echo "    # example: daemon program_name &"			| sudo tee -a wessh
 sudo echo "}"								| sudo tee -a wessh
 sudo echo ""								| sudo tee -a wessh
