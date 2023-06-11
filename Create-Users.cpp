@@ -17,6 +17,7 @@ Program Algrythm:
 #include <fstream>	// required for opening a file for reading and writing
 #include <sstream>	// required to take out numbers from a string
 #include <ctime>	// for password generator function
+#include <vector>       // vector library for using vector in line 33, for dynamic memory allocation
 /*
 using std::cout;
 using std::cin;
@@ -29,9 +30,13 @@ using namespace std; // instead of all above we can use this
 
 
 // GLOBAL VARIABLES START HERE
-std::vector<string>MatNums;
+std::vector<string> MatNums;
   // array of matriculation numbers, its size is determined during the run time
-  // therefore I used dynamic data structure 
+  // therefore I used dynamic data structure
+  /* std::vector: This is the vector container from the C++ Standard Library.
+     It provides dynamic array functionality that handles its own memory management.
+     <string>: This is the type of elements that the vector will hold. In this case, it's holding string objects.
+     MatNums: This is the name of the vector variable */
 // GLOBAL VARIABLES END HERE
 
 
