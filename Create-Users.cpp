@@ -64,7 +64,7 @@ int GetMatNum(string s) {
 }
 
 // take out year
-int GetYear(string filename) {
+int GetYear(const string& filename) {  // the function accept a filename as a parameter
 	ifstream in(filename); // Open CSV file for reading
 	string s;
 	getline(in, s);	// takes the first line, copies it to s string
@@ -113,7 +113,7 @@ string PassGen() {
     	
 }
 // to take CSV file, seperate matriculation numbers and put it in a string array
-void takeCSV(string filename) {
+void takeCSV(const string& filename) {  // the CSV file accepts a filename as a parameter
 	ifstream in(filename); // Open CSV file for reading
 	string s;
 	// reads line by line in CSV file and put them in string s
@@ -161,6 +161,13 @@ void UserDel(string USERNAME, string YEAR) {
 // FUNCTIONS END HERE
 
 int main(int argc, char* argv[]) {
+	// argc is the count of the number of command-line arguments.
+	// the name stands for argument count. it is at least 1 because
+	// the name of the program itself is considered an arguments
+	// char* argv[]: This is an array of character pointers. The name stands for "argument vector"
+	// Each element in the array points to a C-style string that represents one command-line argument.
+	// The first argument (argv[0]) is the name of the program itself. The subsequent elements
+	// (argv[1], argv[2], ...) are the additional arguments provided on the command line.
 	if (argc < 2) {
 		cout << "Please specify a CSV file." << endl;
 		return 1;
