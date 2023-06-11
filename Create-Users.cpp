@@ -29,7 +29,9 @@ using namespace std; // instead of all above we can use this
 
 
 // GLOBAL VARIABLES START HERE
-string MatNums[20]; // array of matriculation numbers
+std::vector<string>MatNums;
+  // array of matriculation numbers, its size is determined during the run time
+  // therefore I used dynamic data structure 
 // GLOBAL VARIABLES END HERE
 
 
@@ -110,7 +112,6 @@ void takeCSV() {
 	ifstream in("read.csv"); // Open CSV file for reading
 	string s;
 	// reads line by line in CSV file and put them in string s
-	int loopcounter = 0;
 	while(getline(in, s)) {	// while there is still line in the csv file, it takes the line and copies to string s
 		int end = size(s);
 		for(int i=0; i <= end; i++) { 
@@ -122,8 +123,7 @@ void takeCSV() {
 		// if matriculation number is present in a line, put in in an array
 		int a = GetMatNum(s);
 		if(a != 0) {
-			MatNums[loopcounter] = to_string (a);
-			loopcounter++;
+			MatNums.push_back(to_string (a));
 		}
 	}
 }
@@ -164,7 +164,7 @@ int main() {
 	cout << "For deleting Users press 2" << endl;
 	cin >> function;
 	if(function == 1) {
-		for (int i = 0; i<20; i++) {
+		for (int i = 0; i<MatNums.size(); i++) {
 			CrUse(MatNums[i], PassGen(), year);
 		}
 	}else if(function == 2) {
