@@ -64,8 +64,8 @@ int GetMatNum(string s) {
 }
 
 // take out year
-int GetYear() {
-	ifstream in("read.csv"); // Open CSV file for reading
+int GetYear(string filename) {
+	ifstream in(filename); // Open CSV file for reading
 	string s;
 	getline(in, s);	// takes the first line, copies it to s string
 	int end = size(s);
@@ -113,8 +113,8 @@ string PassGen() {
     	
 }
 // to take CSV file, seperate matriculation numbers and put it in a string array
-void takeCSV() {
-	ifstream in("read.csv"); // Open CSV file for reading
+void takeCSV(string filename) {
+	ifstream in(filename); // Open CSV file for reading
 	string s;
 	// reads line by line in CSV file and put them in string s
 	while(getline(in, s)) {	// while there is still line in the csv file, it takes the line and copies to string s
@@ -160,11 +160,16 @@ void UserDel(string USERNAME, string YEAR) {
 // ------------------
 // FUNCTIONS END HERE
 
-int main() {
-	string year = to_string(GetYear());
+int main(int argc, char* argv[]) {
+	if (argc < 2) {
+		cout << "Please specify a CSV file." << endl;
+		return 1;
+	}
+	string filename = argv[1];
+	string year = to_string(GetYear(filename));
 	int function;
 	// get CSV file and take out Matriculation Numbers
-	takeCSV(); // takes CSV file, seperates matriculation numbers, put them in an array
+	takeCSV(filename); // takes CSV file, seperates matriculation numbers, put them in an array
 	cout << "For adding Users press 1" << endl;
 	cout << "For deleting Users press 2" << endl;
 	cin >> function;
