@@ -145,9 +145,9 @@ for i in range(len(adata)):
 		if len(stdout) > 2:
 			if verbose:
 				print(" CPPLint errors: "+RED+str(stdout[1].split(": ")[-1])+NC)
+				errl = str(stderr.decode('utf-8')).replace(file+":","").split("\n")
+				print("  "+"\n  ".join(errl))
 			out += RED+str(stdout[1].split(": ")[-1]).rjust(4)+","+NC
-			errl = str(stderr.decode('utf-8')).replace(file+":","").split("\n")
-			print("  "+"\n  ".join(errl))
 		else:
 			if verbose:
 				print(" CPPLint errors: "+GREEN+"0"+NC)
@@ -156,7 +156,7 @@ for i in range(len(adata)):
 
 	# indent check:
 	if file_exists:
-		p = Popen(['/home/kvl/UbiSSHCode/utils/indent.py', file], stdout=PIPE, stderr=PIPE, cwd=here)
+		p = Popen([str(Path.home())+'/UbiSSHCode/utils/indent.py', file], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		stdout = str(stdout.decode('utf-8')).split("\n");
 		if len(stdout) > 2:

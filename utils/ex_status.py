@@ -45,17 +45,21 @@ for i in range(len(data)):
 	p = Popen([str(Path.home())+"/UbiSSHCode/utils/check.py", expth+"/"+ename], stdout=PIPE, stderr=PIPE)
 	stdout, stderr = p.communicate()
 	out = stdout.decode("utf-8")
-	y = out.count('Y')+out.count('0')
-	n = out.count('N')
-	if y > 4 and n == 0:
+	print(uname + " " + out[9:].rstrip('\n'))
+	out = out[9+27:]
+	#print(out.split(','))
+	y = out.count('Y,')+out.count('0,')
+	n = out.count('N,')
+	if y == 5 and n == 0:
 		countP += 1
-	ans = out.split('\t');
+	if n == 5:
+		countM += 1
+	ans = out.split(',');
 	if len(ans)>1:
-		if ans[2].count('Y') > 0: # compiles?
+		if ans[3].count('Y') > 0: # compiles?
 			countC += 1
 		#if ans[3].count('Y') > 0: # works?		
 		#	countW += 1
-	print(uname + " " + out[9:].rstrip('\n'))
 
 print(str(countM) + " students have no solution" )
 print(str(countC) + " students have a compiling solution" )
