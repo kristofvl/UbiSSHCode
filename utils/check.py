@@ -85,7 +85,7 @@ except NameError:
 	exit(0)
 
 # open the assignments file to read which file(s) we should have:
-with open('/home/kvl/assignments/'+ename+'.txt') as f:
+with open(str(Path.home())+'/assignments/'+ename+'.txt') as f:
 	reader = csv.reader(f)
 	adata = list(reader)
 if verbose:
@@ -146,6 +146,8 @@ for i in range(len(adata)):
 			if verbose:
 				print(" CPPLint errors: "+RED+str(stdout[1].split(": ")[-1])+NC)
 			out += RED+str(stdout[1].split(": ")[-1]).rjust(4)+","+NC
+			errl = str(stderr.decode('utf-8')).replace(file+":","").split("\n")
+			print("  "+"\n  ".join(errl))
 		else:
 			if verbose:
 				print(" CPPLint errors: "+GREEN+"0"+NC)
@@ -160,7 +162,7 @@ for i in range(len(adata)):
 		if len(stdout) > 2:
 			if verbose:
 				print(" indent errors: "+RED+str(len(stdout)-2)+NC)
-				print("  \n".join(stdout[:-2]))
+				print("  "+"\n  ".join(stdout[:-2]))
 			out += RED+str(len(stdout)-2).rjust(4)+","+NC
 		else:
 			if verbose:
