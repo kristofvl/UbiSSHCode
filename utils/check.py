@@ -14,15 +14,17 @@ PREVL='\033[1A'
 
 # get exercise name:
 pth = os.path.realpath(os.getcwd())
-subs = pth.split('/')
+verbose = False
 if len(sys.argv) > 1:
-	ename = sys.argv[1]
-	verbose = True
-else:
-	ename = subs[-1]
-	verbose = False
+	pth = os.path.dirname(sys.argv[1])
+	if len(sys.argv)>2:
+		verbose = True
+subs = pth.split('/')
+ename = subs[-1]  # last dir should be the exercise ID
+if verbose:
+	print("checking "+ename+" in "+str(subs))
 	
-if not (ename.startswith("ex") and len(subs)==4):
+if len(subs)!=4 or not ename.startswith("ex"):
 	print("Error: You are not in a correct exercise directory.")
 	print(" (You are in " + pth + ")")
 	exit(0)
@@ -31,6 +33,8 @@ if not (ename.startswith("ex") and len(subs)==4):
 with open('/home/kvl/list.txt', newline='') as f:
 	reader = csv.reader(f)
 	udata = list(reader)
+if verbose:
+	print("read "+str(len(udata))+" users to check against")
 
 def readField(dt, st):
 	if dt.startswith( st ):
@@ -43,6 +47,7 @@ def readField(dt, st):
 	return ""
 
 # search the current student name and ID:
+uname = ""
 for i in range(len(udata)):
 	if len(udata[i]) == 4:
 		uname = readField( udata[i][0], "username: ")
@@ -52,29 +57,44 @@ for i in range(len(udata)):
 			break
 	else:
 		continue
+if verbose:
+	print("user "+subs[2])
+	if uname == subs[2]:
+		print(frstn+" "+lastn+" found")
+	else:
+		print("not found")
 
 # this way we form where we should be:
 here = "/home/" + uname + "/" + ename
 
 try:
-	out = "Checking: " + ename + "\n" 
-	out += "Author:   " + frstn + " " + lastn + "\n"
-	out += "User ID:  " + uname + "\n"
+	if verbose:
+		out = "Checking: " + ename + "\n" 
+		out += "Author:   " + frstn + " " + lastn + "\n"
+		out += "User ID:  " + uname
+		print(out)
+	else:
+		out = ename+" of "+frstn+" "+lastn+":"
 except NameError:
-	out += RED+"Error: This directory user is not (yet) active."+NC
+	print(RED+"Error: This directory user is not (yet) active."+NC)
 	exit(0)
 
-# open the assignments fiel to read which file(s) we should have:
+# open the assignments file to read which file(s) we should have:
 with open('/home/kvl/assignments/'+ename+'.txt') as f:
 	reader = csv.reader(f)
 	adata = list(reader)
+if verbose:
+	print("opened assignment file: "+str(adata))
 
 #with these files, check these:	
 for i in range(len(adata)):
 	file_exists = os.path.isfile( adata[i][0] )
-	out += adata[i][0] + " "
-	out += (GREEN+"exists"+NC) if file_exists else (RED+"not found.\n"+NC)
-	vrb = (GREEN+"Y"+NC) if file_exists else (RED+"N"+NC)
+	if verbose:
+		out = adata[i][0] + " "
+		out += (GREEN+"exists"+NC) if file_exists else (RED+"not found.\n"+NC)
+		print(out)
+	else:
+		out += (GREEN+"Y"+NC) if file_exists else (RED+"N"+NC)
 	# header check:
 	if file_exists:
 		with open( adata[i][0] ) as f:
@@ -83,25 +103,30 @@ for i in range(len(adata)):
 		headr_nm = headr.lower().find(lastn.lower())>0
 		headr_id = headr.find(uname[7:])>0
 		if headr_nm and headr_id:
-			out += ", header is "+GREEN+"fine"+NC
-			vrb += "\t"+GREEN+"Y"+NC
+			if verbose:
+				print(" header is "+GREEN+"fine"+NC)
+			else:
+				out += "\t"+GREEN+"Y"+NC
 		else:
-			out += ", header is "+RED+"missing "
-			out += "name" if not headr_nm else ""
-			out += " and " if not headr_nm and not headr_id else ""
-			out += "ID" if not headr_id else ""
-			out += NC
-			vrb += "\t"+RED+"N"+NC
+			if verbose:
+				out = ", header is "+RED+"missing "
+				out += "name" if not headr_nm else ""
+				out += " and " if not headr_nm and not headr_id else ""
+				out += "ID" if not headr_id else ""
+				out += NC
+				print(out)
+			else:
+				out += "\t"+RED+"N"+NC
 	# compile check:
 	randfile = "/tmp/"+str(randrange(99999999))
 	if file_exists:
 		p = Popen(['/usr/bin/g++', '-c', adata[i][0], '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		if len(stderr) < 1:
-			out += "\n  compiles "+GREEN+"fine"+NC+",\n"
+			out = "\n  compiles "+GREEN+"fine"+NC+",\n"
 			vrb += "\t"+GREEN+"Y"+NC
 		else:
-			out += "\n  "+RED+"doesn't compile"+NC+",\n"
+			out = "\n  "+RED+"doesn't compile"+NC+",\n"
 			vrb += "\t"+RED+"N"+NC
 		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 		stdout, stderr = p.communicate()
@@ -118,29 +143,8 @@ for i in range(len(adata)):
 			out += GREEN+"0"+NC
 			vrb += "\t"+GREEN+"Y"+NC
 	# indent check:
-   # indent ex000/hello.cpp -o test.cpp -d2 -brf -nbfda -nbc -npsl
-		p = Popen(['/usr/bin/indent', adata[i][0], '-o', randfile,
-		'-d2', '-brf', '-nbfda', '-nbc', '-npsl', '-cdw', '-br', '-ce', '-nbad', '-l120', '-npcs', '-nfca'], stdout=PIPE, stderr=PIPE, cwd=here)
-		stdout, stderr = p.communicate()
-		out += "\n  indentation errors: "
-		errCount = 0; lCount = 0
-		with open(adata[i][0]) as f1, open(randfile) as f2:
-			for x, y in zip(f1, f2):
-				lCount += 1
-				lsx = len(x) - len(x.lstrip())
-				lsy = len(y) - len(y.lstrip())
-				if (lsx!=lsy):
-					out += "\n   - bad indentation at "+RED+"line "
-					out += str(lCount)+NC+": ["+x.strip('\n') + "]"
-					errCount += 1
-		if errCount < 1:
-			out += GREEN+"none"+NC
-			vrb += "\t"+GREEN+"Y"+NC
-		else:
-			vrb += "\t"+RED+"N"+NC
-		out += "\n"
+		
 		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 		stdout, stderr = p.communicate()
-
-	print(vrb if verbose else out)	
-   
+	if not verbose:
+		print(out)
