@@ -4,6 +4,7 @@ import csv
 from subprocess import Popen, PIPE
 import os
 from random import randrange
+from pathlib import Path
 
 RED='\033[0;31m'
 NC='\033[0m'
@@ -24,13 +25,15 @@ ename = subs[-1]  # last dir should be the exercise ID
 if verbose:
 	print("checking "+ename+" in "+str(subs))
 	
-if len(subs)!=4 or not ename.startswith("ex"):
+if len(subs)<4 or not ename.startswith("ex"):
 	print("Error: You are not in a correct exercise directory.")
 	print(" (You are in " + pth + ")")
+	print(ename)
+	print(subs)
 	exit(0)
 
 # read all students info:
-with open('/home/kvl/list.txt', newline='') as f:
+with open(str(Path.home())+"/list.txt", newline='') as f:
 	reader = csv.reader(f)
 	udata = list(reader)
 if verbose:
@@ -74,7 +77,9 @@ try:
 		out += "User ID:  " + uname
 		print(out)
 	else:
-		out = ename+" of "+frstn+" "+lastn+": "
+		out = ename+" of "
+		nm = (frstn+" "+lastn)
+		out += nm.ljust(27)[:27]+", "
 except NameError:
 	print(RED+"Error: This directory user is not (yet) active."+NC)
 	exit(0)
@@ -94,7 +99,7 @@ for i in range(len(adata)):
 		out = file + " "
 		out += (GREEN+"exists"+NC) if file_exists else (RED+"not found.\n"+NC)
 		print(out)
-	out += (GREEN+"Y"+NC) if file_exists else (RED+"N"+NC)
+	out += (GREEN+"  Y,"+NC) if file_exists else (RED+"  N,"+NC)
 	# header check:
 	if file_exists:
 		with open( file ) as f:
@@ -105,7 +110,7 @@ for i in range(len(adata)):
 		if headr_nm and headr_id:
 			if verbose:
 				print(" header is "+GREEN+"fine"+NC)
-			out += "\t"+GREEN+"Y"+NC
+			out += GREEN+"  Y,"+NC
 		else:
 			if verbose:
 				out = " header is "+RED+"missing "
@@ -114,8 +119,8 @@ for i in range(len(adata)):
 				out += "ID" if not headr_id else ""
 				out += NC
 				print(out)
-			out += "\t"+RED+"N"+NC
-	else: out += "\t"+RED+"N"+NC
+			out += RED+"  N,"+NC
+	else: out += RED+"  N,"+NC
 
 	# compile check:
 	randfile = "/tmp/"+str(randrange(99999999))
@@ -124,13 +129,13 @@ for i in range(len(adata)):
 		stdout, stderr = p.communicate()
 		if len(stderr) < 1:
 			if verbose: print(" compiles "+GREEN+"fine"+NC)
-			out += "\t"+GREEN+"Y"+NC
+			out += GREEN+"  Y,"+NC
 		else:
-			if verbose: print(RED+"doesn't compile"+NC+",")
-			out += "\t"+RED+"N"+NC
+			if verbose: print(RED+" doesn't compile"+NC)
+			out += RED+"  N,"+NC
 		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 		stdout, stderr = p.communicate()
-	else: out += "\t"+RED+"N"+NC
+	else: out += RED+"  N,"+NC
 		
 	# cpplint check:
 	if file_exists:
@@ -140,28 +145,28 @@ for i in range(len(adata)):
 		if len(stdout) > 2:
 			if verbose:
 				print(" CPPLint errors: "+RED+str(stdout[1].split(": ")[-1])+NC)
-			out += "\t"+RED+"N"+NC
+			out += RED+str(stdout[1].split(": ")[-1]).rjust(4)+","+NC
 		else:
 			if verbose:
 				print(" CPPLint errors: "+GREEN+"0"+NC)
-			out += "\t"+GREEN+"Y"+NC
-	else: out += "\t"+RED+"N"+NC
+			out += GREEN+"   0,"+NC
+	else: out += RED+"   N,"+NC
 
 	# indent check:
 	if file_exists:
-		p = Popen(['/usr/bin/indent', file], stdout=PIPE, stderr=PIPE, cwd=here)
+		p = Popen(['/home/kvl/UbiSSHCode/utils/indent.py', file], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		stdout = str(stdout.decode('utf-8')).split("\n");
 		if len(stdout) > 2:
 			if verbose:
-				print(" indent errors: "+RED+str(stdout[1].split(": ")[-1])+NC)
-			out += "\t"+RED+"N"+NC
+				print(" indent errors: "+RED+str(len(stdout)-2)+NC)
+				print("  \n".join(stdout[:-2]))
+			out += RED+str(len(stdout)-2).rjust(4)+","+NC
 		else:
 			if verbose:
 				print(" indent errors: "+GREEN+"0"+NC)
-			out += "\t"+GREEN+"Y"+NC
-	else: out += "\t"+RED+"N"+NC
-				
+			out += GREEN+"   0,"+NC
+	else: out += RED+"   N,"+NC
 
 # print to console:
 if not verbose:

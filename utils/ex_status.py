@@ -3,6 +3,7 @@ import sys
 import csv
 from subprocess import Popen, PIPE
 import os
+from pathlib import Path
 
 if len(sys.argv) < 2:
 	print("please provide an exercise")
@@ -10,7 +11,7 @@ if len(sys.argv) < 2:
 else:
 	ename = sys.argv[1]
 
-with open('list.txt', newline='') as f:
+with open(str(Path.home())+"/list.txt", newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
 
@@ -41,27 +42,20 @@ for i in range(len(data)):
 
 	expth = "/home/"+uname+"/"+ename
 
-	out = "directory missing\t\t"
-	if os.path.isdir(expth):
-		#p = Popen(["/home/kvl/check.py", ename], cwd=expth, stdout=PIPE, stderr=PIPE)
-		p = Popen(["check", ename], cwd=expth, stdout=PIPE, stderr=PIPE)
-		stdout, stderr = p.communicate()
-		out = stdout.decode("utf-8")
-		y = out.count('Y')
-		n = out.count('N')
-		if y > 4 and n == 0:
-			countP += 1
-		ans = out.split('\t');
-		if len(ans)>1:
-			if ans[2].count('Y') > 0: # compiles?
-				countC += 1
-			#if ans[3].count('Y') > 0: # works?		
-			#	countW += 1
-	else:
-		countM += 1
-
-	print(uname + ":\t" + out.rstrip('\n') + "\t"+lastn)
-
+	p = Popen([str(Path.home())+"/UbiSSHCode/utils/check.py", expth+"/"+ename], stdout=PIPE, stderr=PIPE)
+	stdout, stderr = p.communicate()
+	out = stdout.decode("utf-8")
+	y = out.count('Y')+out.count('0')
+	n = out.count('N')
+	if y > 4 and n == 0:
+		countP += 1
+	ans = out.split('\t');
+	if len(ans)>1:
+		if ans[2].count('Y') > 0: # compiles?
+			countC += 1
+		#if ans[3].count('Y') > 0: # works?		
+		#	countW += 1
+	print(uname + " " + out[9:].rstrip('\n'))
 
 print(str(countM) + " students have no solution" )
 print(str(countC) + " students have a compiling solution" )
