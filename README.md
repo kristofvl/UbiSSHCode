@@ -24,3 +24,10 @@ Ubiquitous SSH Code Server
   4-to run the script on startup type: sudo update-rc.d wessh defaults
   
   5-to stop running the script on startup type: sudo update-rc.d wessh remove
+
+* Utilities:
+  - check for inspecting a single solution
+  - ex_status for inspecting all solutions for a given assignment
+  - indent for checking 2-space identation
+ 
+
