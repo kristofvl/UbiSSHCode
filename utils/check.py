@@ -74,7 +74,7 @@ try:
 		out += "User ID:  " + uname
 		print(out)
 	else:
-		out = ename+" of "+frstn+" "+lastn+":"
+		out = ename+" of "+frstn+" "+lastn+": "
 except NameError:
 	print(RED+"Error: This directory user is not (yet) active."+NC)
 	exit(0)
@@ -88,16 +88,16 @@ if verbose:
 
 #with these files, check these:	
 for i in range(len(adata)):
-	file_exists = os.path.isfile( adata[i][0] )
+	file = pth+"/"+adata[i][0]
+	file_exists = os.path.isfile(file)
 	if verbose:
-		out = adata[i][0] + " "
+		out = file + " "
 		out += (GREEN+"exists"+NC) if file_exists else (RED+"not found.\n"+NC)
 		print(out)
-	else:
-		out += (GREEN+"Y"+NC) if file_exists else (RED+"N"+NC)
+	out += (GREEN+"Y"+NC) if file_exists else (RED+"N"+NC)
 	# header check:
 	if file_exists:
-		with open( adata[i][0] ) as f:
+		with open( file ) as f:
 			code = f.read()
 		headr = code.partition('/*')[2].partition('*/')[0]
 		headr_nm = headr.lower().find(lastn.lower())>0
@@ -105,46 +105,64 @@ for i in range(len(adata)):
 		if headr_nm and headr_id:
 			if verbose:
 				print(" header is "+GREEN+"fine"+NC)
-			else:
-				out += "\t"+GREEN+"Y"+NC
+			out += "\t"+GREEN+"Y"+NC
 		else:
 			if verbose:
-				out = ", header is "+RED+"missing "
+				out = " header is "+RED+"missing "
 				out += "name" if not headr_nm else ""
 				out += " and " if not headr_nm and not headr_id else ""
 				out += "ID" if not headr_id else ""
 				out += NC
 				print(out)
-			else:
-				out += "\t"+RED+"N"+NC
+			out += "\t"+RED+"N"+NC
+	else: out += "\t"+RED+"N"+NC
+
 	# compile check:
 	randfile = "/tmp/"+str(randrange(99999999))
 	if file_exists:
-		p = Popen(['/usr/bin/g++', '-c', adata[i][0], '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
+		p = Popen(['/usr/bin/g++', '-c', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		if len(stderr) < 1:
-			out = "\n  compiles "+GREEN+"fine"+NC+",\n"
-			vrb += "\t"+GREEN+"Y"+NC
+			if verbose: print(" compiles "+GREEN+"fine"+NC)
+			out += "\t"+GREEN+"Y"+NC
 		else:
-			out = "\n  "+RED+"doesn't compile"+NC+",\n"
-			vrb += "\t"+RED+"N"+NC
+			if verbose: print(RED+"doesn't compile"+NC+",")
+			out += "\t"+RED+"N"+NC
 		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 		stdout, stderr = p.communicate()
+	else: out += "\t"+RED+"N"+NC
 		
 	# cpplint check:
-		p = Popen(['/usr/local/bin/cpplint', adata[i][0]], stdout=PIPE, stderr=PIPE, cwd=here)
+	if file_exists:
+		p = Popen(['/usr/local/bin/cpplint', file], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
-		out += "  CPPLint errors: "
 		stdout = str(stdout.decode('utf-8')).split("\n");
 		if len(stdout) > 2:
-			out += RED+str(stdout[1].split(": ")[-1])+NC
-			vrb += "\t"+RED+"N"+NC
+			if verbose:
+				print(" CPPLint errors: "+RED+str(stdout[1].split(": ")[-1])+NC)
+			out += "\t"+RED+"N"+NC
 		else:
-			out += GREEN+"0"+NC
-			vrb += "\t"+GREEN+"Y"+NC
+			if verbose:
+				print(" CPPLint errors: "+GREEN+"0"+NC)
+			out += "\t"+GREEN+"Y"+NC
+	else: out += "\t"+RED+"N"+NC
+
 	# indent check:
-		
-		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
+	if file_exists:
+		p = Popen(['/usr/bin/indent', file], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
-	if not verbose:
-		print(out)
+		stdout = str(stdout.decode('utf-8')).split("\n");
+		if len(stdout) > 2:
+			if verbose:
+				print(" indent errors: "+RED+str(stdout[1].split(": ")[-1])+NC)
+			out += "\t"+RED+"N"+NC
+		else:
+			if verbose:
+				print(" indent errors: "+GREEN+"0"+NC)
+			out += "\t"+GREEN+"Y"+NC
+	else: out += "\t"+RED+"N"+NC
+				
+
+# print to console:
+if not verbose:
+	print(out)
