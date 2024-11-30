@@ -37,11 +37,7 @@ for l in lines:
 		extra = 0
 	if "/*" in str(l):
 		comment = True
-	if "public:" in str(l):
-		n = 1
-	if "protected:" in str(l):
-		n = 1
-	if "private:" in str(l):
+	if any(x in str(l) for x in ["private:", "protected:", "public:"]):
 		n = 1
 	if "case " in str(l):
 		extra = 0	
@@ -63,11 +59,7 @@ for l in lines:
 		n = n + 2
 	if "*/" in str(l):
 		comment = False
-	if "public:" in str(l):
-		n = 2
-	if "protected:" in str(l):
-		n = 2
-	if "private:" in str(l):
+	if any(x in str(l) for x in ["private:", "protected:", "public:"]):
 		n = 2
 	ln = ln + 1
 
