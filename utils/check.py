@@ -190,7 +190,7 @@ for tst in adata[1:]:
 	print('echo '+inStr+' | '+randfile)
 	outStr = tst[1][5:-1]
 	try:
-		p = Popen(['echo \"'+inStr+'\" | '+randfile], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
+		p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
 		stdout, stderr = p.communicate()
 	# This will still result in Traceback, need to avoid this:
 	except MemoryError as err:
