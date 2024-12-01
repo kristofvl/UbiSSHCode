@@ -106,9 +106,10 @@ for i in range(len(adata[0])):
 	file_exists = os.path.isfile(file)
 	if verbose:
 		out = file + " "
-		out += (GREEN+"exists"+NC) if file_exists else (RED+"not found.\n"+NC)
+		out += (GREEN+"exists"+NC) if file_exists else (RED+"not found."+NC)
 		print(out)
 	out += (GREEN+"  Y,"+NC) if file_exists else (RED+"  N,"+NC)
+
 	# header check:
 	if file_exists:
 		with open( file ) as f:
@@ -145,7 +146,7 @@ for i in range(len(adata[0])):
 		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 		stdout, stderr = p.communicate()
 	else: out += RED+"  N,"+NC
-		
+
 	# cpplint check:
 	if file_exists:
 		p = Popen(['/usr/local/bin/cpplint', file], stdout=PIPE, stderr=PIPE, cwd=here)
@@ -180,34 +181,38 @@ for i in range(len(adata[0])):
 	else: out += RED+"   N,"+NC
 
 # the last compile file is now tested:
-p = Popen(['/usr/bin/g++', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
-stdout, stderr = p.communicate()
-tsts = len(adata[1:])
-#with these files, check these:
-for tst in adata[1:]:
-	inStr = tst[0].replace('\\\\','\\')
-	inStr = inStr[4:-1]
-	print('echo '+inStr+' | '+randfile)
-	outStr = tst[1][5:-1]
-	try:
-		p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
-		stdout, stderr = p.communicate()
-	# This will still result in Traceback, need to avoid this:
-	except MemoryError as err:
+if os.path.isfile(file):
+	p = Popen(['/usr/bin/g++', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
+	stdout, stderr = p.communicate()
+	tsts = len(adata[1:])
+	#with these files, check these:
+	for tst in adata[1:]:
+		inStr = tst[0].replace('\\\\','\\')
+		inStr = inStr[4:-1]
+		outStr = tst[1][5:-1]
+		try:
+			p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
+			stdout, stderr = p.communicate()
+		# This will still result in Traceback, need to avoid this:
+		except MemoryError as err:
+			if verbose:
+				print(" executable did not end when tested.")
+		if outStr in str(stdout):
+			tsts = tsts - 1
+	if tsts == 0:
+		out += GREEN+"   Y"+NC
 		if verbose:
-			print(" executable did not end when tested.")
-	#print(stdout)
-	if outStr in str(stdout):
-		tsts = tsts - 1
-if tsts == 0:
-	out += GREEN+"   Y"+NC
-	if verbose:
-		print(" compiled file "+GREEN+"solves the assignment"+NC)
+			print(" compiled file "+GREEN+"solves the assignment"+NC)
+	else:
+		out += RED+"   N"+NC
+		if verbose:
+			print(" compiled file "+RED+"does not fully solve assignment"+NC)
 else:
-	out += RED+"   N"+NC
 	if verbose:
-		print(" compiled file "+RED+"does not fully solve assignment"+NC)
-	
+		print("compiled file "+RED+"not found"+NC)
+	else:
+		out += RED+"   N"+NC
+				
 # remove compiled file:
 p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 stdout, stderr = p.communicate()
