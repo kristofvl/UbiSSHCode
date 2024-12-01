@@ -187,7 +187,7 @@ tsts = len(adata[1:])
 for tst in adata[1:]:
 	inStr = tst[0].replace('\\\\','\\')
 	inStr = inStr[4:-1]
-	#print('echo '+inStr+' | '+randfile)
+	print('echo '+inStr+' | '+randfile)
 	outStr = tst[1][5:-1]
 	try:
 		p = Popen(['echo \"'+inStr+'\" | '+randfile], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
