@@ -3,6 +3,7 @@ import sys
 import csv
 from subprocess import Popen, PIPE
 import os
+import re
 from random import randrange
 from pathlib import Path
 
@@ -86,7 +87,7 @@ except NameError:
 
 # open the assignments file to read which file(s) we should have:
 with open(str(Path.home())+'/assignments/'+ename+'.txt') as f:
-	reader = csv.reader(f)
+	reader = csv.reader(f, delimiter = ';')
 	adata = list(reader)
 
 # the first line has all files to check for compilation
@@ -188,11 +189,12 @@ if os.path.isfile(file):
 	#with these files, check these:
 	for tst in adata[1:]:
 		inStr = tst[0].replace('\\\\','\\')
-		inStr = inStr[4:-1]
-		outStr = tst[1][5:-1]
+		inStr = re.findall(r'"([^"]*)"', tst[0])[0]
+		outStr = re.findall(r'"([^"]*)"', tst[1])[0]
 		try:
 			p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
 			stdout, stderr = p.communicate()
+			#print(stdout)
 		# This will still result in Traceback, need to avoid this:
 		except MemoryError as err:
 			if verbose:
