@@ -88,11 +88,20 @@ except NameError:
 with open(str(Path.home())+'/assignments/'+ename+'.txt') as f:
 	reader = csv.reader(f)
 	adata = list(reader)
-if verbose:
-	print("opened assignment file: "+str(adata))
 
-#with these files, check these:	
-for i in range(len(adata)):
+# the first line has all files to check for compilation
+if type(adata[0]) is not list:
+	print("assignment has no target files?")
+	exit(0)
+
+# random compile file:
+randfile = "/tmp/"+str(randrange(99999999))
+file = ""
+
+#with these files, check these:
+for i in range(len(adata[0])):
+	if verbose:
+		print("opened assignment file: "+str(adata[i][0]))
 	file = pth+"/"+adata[i][0]
 	file_exists = os.path.isfile(file)
 	if verbose:
@@ -123,7 +132,6 @@ for i in range(len(adata)):
 	else: out += RED+"  N,"+NC
 
 	# compile check:
-	randfile = "/tmp/"+str(randrange(99999999))
 	if file_exists:
 		p = Popen(['/usr/bin/g++', '-c', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
@@ -133,6 +141,7 @@ for i in range(len(adata)):
 		else:
 			if verbose: print(RED+" doesn't compile"+NC)
 			out += RED+"  N,"+NC
+		# remove compiled file:
 		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 		stdout, stderr = p.communicate()
 	else: out += RED+"  N,"+NC
@@ -169,6 +178,39 @@ for i in range(len(adata)):
 				print(" indent errors: "+GREEN+"0"+NC)
 			out += GREEN+"   0,"+NC
 	else: out += RED+"   N,"+NC
+
+# the last compile file is now tested:
+p = Popen(['/usr/bin/g++', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
+stdout, stderr = p.communicate()
+tsts = len(adata[1:])
+#with these files, check these:
+for tst in adata[1:]:
+	inStr = tst[0].replace('\\\\','\\')
+	inStr = inStr[4:-1]
+	#print('echo '+inStr+' | '+randfile)
+	outStr = tst[1][5:-1]
+	try:
+		p = Popen(['echo \"'+inStr+'\" | '+randfile], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
+		stdout, stderr = p.communicate()
+	# This will still result in Traceback, need to avoid this:
+	except MemoryError as err:
+		if verbose:
+			print(" executable did not end when tested.")
+	#print(stdout)
+	if outStr in str(stdout):
+		tsts = tsts - 1
+if tsts == 0:
+	out += GREEN+"   Y"+NC
+	if verbose:
+		print(" compiled file "+GREEN+"solves the assignment"+NC)
+else:
+	out += RED+"   N"+NC
+	if verbose:
+		print(" compiled file "+RED+"does not fully solve assignment"+NC)
+	
+# remove compiled file:
+p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
+stdout, stderr = p.communicate()
 
 # print to console:
 if not verbose:
