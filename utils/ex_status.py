@@ -11,6 +11,10 @@ if len(sys.argv) < 2:
 else:
 	ename = sys.argv[1]
 
+verbose = True
+if len(sys.argv) > 2:
+	verbose = False;
+
 with open(str(Path.home())+"/list.txt", newline='') as f:
     reader = csv.reader(f)
     data = list(reader)
@@ -41,6 +45,15 @@ for i in range(len(data)):
 		continue
 
 	expth = "/home/"+uname+"/"+ename
+
+	if not verbose:
+		with open(str(Path.home())+"/assignments/"+ename+".txt") as f:
+			fname = f.readline().strip('\n')
+		#print(fname)
+		p = Popen(['source-highlight','-n','--infer-lang','-f','esc','--style-file=esc.style','-i',expth+'/'+fname])
+		#source-highlight -n --infer-lang -f esc --style-file=esc.style -i $f
+		input("\nPress Enter to continue\n")
+		continue
 
 	p = Popen([str(Path.home())+"/UbiSSHCode/utils/check.py", expth+"/"+ename], stdout=PIPE, stderr=PIPE)
 	stdout, stderr = p.communicate()
