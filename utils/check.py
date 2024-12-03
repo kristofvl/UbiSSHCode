@@ -21,10 +21,12 @@ if len(sys.argv) > 1:
 	pth = os.path.dirname(sys.argv[1])
 	if len(sys.argv)>2:
 		verbose = True
+else:
+	verbose = True
 subs = pth.split('/')
 ename = subs[-1]  # last dir should be the exercise ID
-if verbose:
-	print("checking "+ename+" in "+str(subs))
+#if verbose:
+#	print("checking "+ename+" in "+str(subs))
 	
 if len(subs)<4 or not ename.startswith("ex"):
 	print("Error: You are not in a correct exercise directory.")
@@ -33,40 +35,17 @@ if len(subs)<4 or not ename.startswith("ex"):
 	print(subs)
 	exit(0)
 
-# read all students info:
-with open(str(Path.home())+"/list.txt", newline='') as f:
-	reader = csv.reader(f)
-	udata = list(reader)
-if verbose:
-	print("read "+str(len(udata))+" users to check against")
+uname = subs[2]
 
-def readField(dt, st):
-	if dt.startswith( st ):
-		if len(dt) > len(st):
-			return dt[len(st):]
-		else:
-			print( "value empty, line " + str(i) )
-	else:
-		print( "field name missing, line " + str(i) )
-	return ""
-
-# search the current student name and ID:
-uname = ""
-for i in range(len(udata)):
-	if len(udata[i]) == 4:
-		uname = readField( udata[i][0], "username: ")
-		if uname == subs[2]:
-			lastn = readField( udata[i][2], " full name:")
-			frstn = readField( udata[i][3], " ")
-			break
-	else:
-		continue
-if verbose:
-	print("user "+subs[2])
-	if uname == subs[2]:
-		print(frstn+" "+lastn+" found")
-	else:
-		print("not found")
+s = "getent passwd \""+uname+"\" | cut -d ':' -f 5"
+p = Popen([s], stdout=PIPE, stderr=PIPE, shell=True, executable="/bin/bash")
+stdout, stderr = p.communicate()
+outstr = stdout.decode('utf-8').strip('\n').strip('\r')
+if "," in outstr:
+	lastn, frstn = outstr.split(',')
+else:
+	lastn = outstr; frstn = ""
+names = outstr.strip(',').split()
 
 # this way we form where we should be:
 here = "/home/" + uname + "/" + ename
@@ -74,7 +53,7 @@ here = "/home/" + uname + "/" + ename
 try:
 	if verbose:
 		out = "Checking: " + ename + "\n" 
-		out += "Author:   " + frstn + " " + lastn + "\n"
+		out += "Author:  " + frstn + " " + lastn + "\n"
 		out += "User ID:  " + uname
 		print(out)
 	else:
@@ -86,7 +65,7 @@ except NameError:
 	exit(0)
 
 # open the assignments file to read which file(s) we should have:
-with open(str(Path.home())+'/assignments/'+ename+'.txt') as f:
+with open('/var/local/assignments/'+ename+'.txt') as f:
 	reader = csv.reader(f, delimiter = ';')
 	adata = list(reader)
 
@@ -150,7 +129,7 @@ for i in range(len(adata[0])):
 
 	# cpplint check:
 	if file_exists:
-		p = Popen(['/usr/local/bin/cpplint', file], stdout=PIPE, stderr=PIPE, cwd=here)
+		p = Popen(['cpplint', file], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		stdout = str(stdout.decode('utf-8')).split("\n");
 		if len(stdout) > 2:
@@ -167,14 +146,14 @@ for i in range(len(adata[0])):
 
 	# indent check:
 	if file_exists:
-		p = Popen([str(Path.home())+'/UbiSSHCode/utils/indent.py', file], stdout=PIPE, stderr=PIPE, cwd=here)
+		p = Popen(['indent', file], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		stdout = str(stdout.decode('utf-8')).split("\n");
 		if len(stdout) > 2:
 			if verbose:
-				print(" indent errors: "+RED+str(len(stdout)-2)+NC)
+				print(" indent warnings: "+ORANGE+str(len(stdout)-2)+NC)
 				print("  "+"\n  ".join(stdout[:-2]))
-			out += RED+str(len(stdout)-2).rjust(4)+","+NC
+			out += ORANGE+str(len(stdout)-2).rjust(4)+","+NC
 		else:
 			if verbose:
 				print(" indent errors: "+GREEN+"0"+NC)
@@ -183,7 +162,7 @@ for i in range(len(adata[0])):
 
 # the last compile file is now tested:
 if os.path.isfile(file):
-	p = Popen(['/usr/bin/g++', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
+	p = Popen(['g++', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
 	stdout, stderr = p.communicate()
 	tsts = len(adata[1:])
 	#with these files, check these:
@@ -192,7 +171,7 @@ if os.path.isfile(file):
 		inStr = re.findall(r'"([^"]*)"', tst[0])[0]
 		outStr = re.findall(r'"([^"]*)"', tst[1])[0]
 		try:
-			p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
+			p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, executable="/bin/bash")
 			stdout, stderr = p.communicate()
 			#print(stdout)
 		# This will still result in Traceback, need to avoid this:
