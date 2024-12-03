@@ -67,7 +67,7 @@ except NameError:
 # open the assignments file to read which file(s) we should have:
 with open('/var/local/assignments/'+ename+'.txt') as f:
 	reader = csv.reader(f, delimiter = ';')
-	adata = list(reader)
+	adata = list(reader) 
 
 # the first line has all files to check for compilation
 if type(adata[0]) is not list:
@@ -136,7 +136,7 @@ for i in range(len(adata[0])):
 			if verbose:
 				print(" CPPLint errors: "+RED+str(stdout[1].split(": ")[-1])+NC)
 				errl = str(stderr.decode('utf-8')).replace(file+":","").split("\n")
-				print("  "+"\n  ".join(errl))
+				print("  "+"\n  ".join(errl))  # TODO: remove extra \n when errors occur
 			out += RED+str(stdout[1].split(": ")[-1]).rjust(4)+","+NC
 		else:
 			if verbose:
