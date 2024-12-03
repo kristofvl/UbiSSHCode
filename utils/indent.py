@@ -29,22 +29,27 @@ out = ""
 n = 0  # expected spaces
 ln = 1
 comment = False
+commentline = False
+goback = False
 extra = 0
 for l in lines:
-	numSpaces = len("".join(l)) - len("".join(l).lstrip())
-	if "}" in str(l):  # do we have a block end
+	ll = "".join(l)
+	numSpaces = len(ll) - len(ll.lstrip())
+	if "}" in ll:  # do we have a block end
 		n = n - 2
 		extra = 0
-	if "/*" in str(l):
+	if "/*" in ll:
 		comment = True
-	if any(x in str(l) for x in ["private:", "protected:", "public:"]):
+	if ll.lstrip().startswith("//"):
+		commentline = True
+	if any(x in ll for x in ["private:", "protected:", "public:"]):
 		n = 1
-	if "case " in str(l):
-		extra = 0	
+	if "case " in ll or "default" in ll:
+		extra = 0
 	# don't complain about empty lines:
-	lineLen = len("".join(l).strip())
-	if numSpaces != (n+extra) and not comment and lineLen>0:
-		line = (("".join(l)).ljust(32))[0:32].lstrip(' ')
+	lineLen = len(ll.lstrip())
+	if numSpaces != (n+extra) and not comment and lineLen > 0 and not commentline:
+		line = (ll.ljust(32))[0:32].lstrip(' ')
 		if n <= numSpaces:
 			line = GREEN+("_"*n)+RED+("_"*(numSpaces-n))+NC+line
 		else:
@@ -53,15 +58,27 @@ for l in lines:
 		out += RED+" Expected "+str(n)+" spaces, found "+str(numSpaces)+NC
 		out += "\n"
 	# adjust expected spaces for case:
-	if "case " in str(l):
-		extra = "".join(l).rfind(":")+2-n
-	if "{" in str(l):  # do we have a block start
+	if "case " in ll and not "break" in ll:
+		extra = ll.rfind(":")+2-n
+	if "default " in ll and not "break" in ll:
+		extra = ll.rfind(":")+2-n
+	# for if statements without {}
+	if goback:
+		n = n - 2
+		goback = False
+	if "if" in ll and not "{" in ll and not ";" in ll:
 		n = n + 2
-	if "*/" in str(l):
+		goback = True
+	if "else" in ll and not "{" in ll and not ";" in ll:
+		n = n + 2
+		goback = True
+	if "{" in ll:  # do we have a block start
+		n = n + 2
+	if "*/" in ll:
 		comment = False
-	if any(x in str(l) for x in ["private:", "protected:", "public:"]):
+	if any(x in ll for x in ["private:", "protected:", "public:"]):
 		n = 2
 	ln = ln + 1
-
+	commentline = False
 if 1:
 	print(out)
