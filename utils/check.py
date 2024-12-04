@@ -4,8 +4,10 @@ import csv
 from subprocess import Popen, PIPE
 import os
 import re
+from shutil import get_terminal_size
 from random import randrange
-from pathlib import Path
+#print(get_terminal_size()[0])
+#from pathlib import Path
 
 RED='\033[0;31m'
 NC='\033[0m'
@@ -27,7 +29,7 @@ subs = pth.split('/')
 ename = subs[-1]  # last dir should be the exercise ID
 #if verbose:
 #	print("checking "+ename+" in "+str(subs))
-	
+
 if len(subs)<4 or not ename.startswith("ex"):
 	print("Error: You are not in a correct exercise directory.")
 	print(" (You are in " + pth + ")")
@@ -52,9 +54,11 @@ here = "/home/" + uname + "/" + ename
 
 try:
 	if verbose:
-		out = "Checking: " + ename + "\n" 
-		out += "Author:  " + frstn + " " + lastn + "\n"
-		out += "User ID:  " + uname
+		#out = "\u259B"+"\u2580"*72+"\u259C"
+		out = "\u250C"+"\u2500"*72+"\u2510"
+		out += "\n\u2502Checking: " + ename + " "*57 + "\u2502\n" 
+		out += "\u2502Author:  " + frstn + " " + lastn + " "*(62-len(frstn)-len(lastn)) + "\u2502\n"
+		out += "\u2502User ID:  " + uname + " "*48 + "\u2502"
 		print(out)
 	else:
 		out = ename+" of "
@@ -67,7 +71,7 @@ except NameError:
 # open the assignments file to read which file(s) we should have:
 with open('/var/local/assignments/'+ename+'.txt') as f:
 	reader = csv.reader(f, delimiter = ';')
-	adata = list(reader) 
+	adata = list(reader)
 
 # the first line has all files to check for compilation
 if type(adata[0]) is not list:
@@ -78,16 +82,18 @@ if type(adata[0]) is not list:
 randfile = "/tmp/"+str(randrange(99999999))
 file = ""
 
+points = 0
+
 #with these files, check these:
 for i in range(len(adata[0])):
 	if verbose:
-		print("opened assignment file: "+str(adata[i][0]))
+		print("\u2502Target:   "+str(adata[i][0])+" "*(62-len(adata[i][0]))+"\u2502")
 	file = pth+"/"+adata[i][0]
 	file_exists = os.path.isfile(file)
 	if verbose:
-		out = file + " "
-		out += (GREEN+"exists"+NC) if file_exists else (RED+"not found."+NC)
-		print(out)
+		out = "\u2502 " + file + " "
+		out += (GREEN+"exists.   "+NC) if file_exists else (RED+"not found."+NC)
+		print(out+" "*(60-len(file))+"\u2502")
 	out += (GREEN+"  Y,"+NC) if file_exists else (RED+"  N,"+NC)
 
 	# header check:
@@ -99,50 +105,20 @@ for i in range(len(adata[0])):
 		headr_id = headr.find(uname[7:])>0
 		if headr_nm and headr_id:
 			if verbose:
-				print(" header is "+GREEN+"fine"+NC)
+				print("\u2502 header is "+GREEN+"fine"+NC+" "*57+"\u2502")
 			out += GREEN+"  Y,"+NC
 		else:
 			if verbose:
-				out = " header is "+RED+"missing "
+				out = "\u2502 header is "+RED+"missing "
 				out += "name" if not headr_nm else ""
 				out += " and " if not headr_nm and not headr_id else ""
 				out += "ID" if not headr_id else ""
 				out += NC
+				out += " "*(84-len(out))+"\u2502"
 				print(out)
+			points = points - 1
 			out += RED+"  N,"+NC
 	else: out += RED+"  N,"+NC
-
-	# compile check:
-	if file_exists:
-		p = Popen(['/usr/bin/g++', '-c', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
-		stdout, stderr = p.communicate()
-		if len(stderr) < 1:
-			if verbose: print(" compiles "+GREEN+"fine"+NC)
-			out += GREEN+"  Y,"+NC
-		else:
-			if verbose: print(RED+" doesn't compile"+NC)
-			out += RED+"  N,"+NC
-		# remove compiled file:
-		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
-		stdout, stderr = p.communicate()
-	else: out += RED+"  N,"+NC
-
-	# cpplint check:
-	if file_exists:
-		p = Popen(['cpplint', file], stdout=PIPE, stderr=PIPE, cwd=here)
-		stdout, stderr = p.communicate()
-		stdout = str(stdout.decode('utf-8')).split("\n");
-		if len(stdout) > 2:
-			if verbose:
-				print(" CPPLint errors: "+RED+str(stdout[1].split(": ")[-1])+NC)
-				errl = str(stderr.decode('utf-8')).replace(file+":","").split("\n")
-				print("  "+"\n  ".join(errl))  # TODO: remove extra \n when errors occur
-			out += RED+str(stdout[1].split(": ")[-1]).rjust(4)+","+NC
-		else:
-			if verbose:
-				print(" CPPLint errors: "+GREEN+"0"+NC)
-			out += GREEN+"   0,"+NC
-	else: out += RED+"   N,"+NC
 
 	# indent check:
 	if file_exists:
@@ -151,14 +127,55 @@ for i in range(len(adata[0])):
 		stdout = str(stdout.decode('utf-8')).split("\n");
 		if len(stdout) > 2:
 			if verbose:
-				print(" indent warnings: "+ORANGE+str(len(stdout)-2)+NC)
-				print("  "+"\n  ".join(stdout[:-2]))
+				errorsCnt = str(len(stdout)-2)
+				print("\u2502 indent warnings: "+ORANGE+errorsCnt+NC+" "*(54-len(errorsCnt))+"\u2502")
+				for lne in stdout:
+					if len(lne) > 4: print("\u2502  "+lne+"    \u2502")
+			points = points - 1
 			out += ORANGE+str(len(stdout)-2).rjust(4)+","+NC
 		else:
 			if verbose:
-				print(" indent errors: "+GREEN+"0"+NC)
+				print("\u2502 indent warnings: "+GREEN+"0"+NC+" "*53+"\u2502")
 			out += GREEN+"   0,"+NC
 	else: out += RED+"   N,"+NC
+
+	# cpplint check:
+	if file_exists:
+		p = Popen(['cpplint', file], stdout=PIPE, stderr=PIPE, cwd=here)
+		stdout, stderr = p.communicate()
+		stdout = str(stdout.decode('utf-8')).split("\n");
+		if len(stdout) > 2:
+			if verbose:
+				errorsCnt = str(stdout[1].split(": ")[-1])
+				print("\u2502 CPPLint errors: "+RED+errorsCnt+NC+" "*(55-len(errorsCnt))+"\u2502")
+				errl = str(stderr.decode('utf-8')).replace(file+":","").split("\n")
+				for lne in errl:
+					if len(lne) > 67:
+						print("\u2502  "+lne[:69]+" \u2502")
+					else:
+						if len(lne) > 4: print("\u2502  "+lne+" "*(69-len(lne))+" \u2502")
+			points = points - 1
+			out += RED+str(stdout[1].split(": ")[-1]).rjust(4)+","+NC
+		else:
+			if verbose:
+				print("\u2502 CPPLint errors: "+GREEN+"0"+NC+" "*54+"\u2502")
+			out += GREEN+"   0,"+NC
+	else: out += RED+"   N,"+NC
+
+	# compile check:
+	if file_exists:
+		p = Popen(['/usr/bin/g++', '-c', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
+		stdout, stderr = p.communicate()
+		if len(stderr) < 1:
+			if verbose: print("\u2502 compiles "+GREEN+"fine"+NC+" "*58+"\u2502")
+			out += GREEN+"  Y,"+NC
+		else:
+			if verbose: print("\u2502"+RED+" doesn't compile"+NC+" "+58+"\u2502")
+			out += RED+"  N,"+NC
+		# remove compiled file:
+		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
+		stdout, stderr = p.communicate()
+	else: out += RED+"  N,"+NC
 
 # the last compile file is now tested:
 if os.path.isfile(file):
@@ -183,17 +200,18 @@ if os.path.isfile(file):
 	if tsts == 0:
 		out += GREEN+"   Y"+NC
 		if verbose:
-			print(" compiled file "+GREEN+"solves the assignment"+NC)
+			print("\u2502 assignment "+GREEN+"is solved"+NC+" "*51+"\u2502")
+			points = points + 5;
 	else:
 		out += RED+"   N"+NC
 		if verbose:
-			print(" compiled file "+RED+"does not fully solve assignment"+NC)
+			print("\u2502 assignment "+RED+"is not fully solved yet"+NC+" "*37+"\u2502")
 else:
 	if verbose:
-		print("compiled file "+RED+"not found"+NC)
+		print("\u2502 compiled file "+RED+"not found"+NC+" "*48+"\u2502")
 	else:
 		out += RED+"   N"+NC
-				
+
 # remove compiled file:
 p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 stdout, stderr = p.communicate()
@@ -201,3 +219,9 @@ stdout, stderr = p.communicate()
 # print to console:
 if not verbose:
 	print(out)
+else:
+	print("\u2514"+"\u2500"*72+"\u2518\n")
+
+if points < 0:
+	points = 0
+exit(points)
