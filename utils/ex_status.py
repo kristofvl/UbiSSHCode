@@ -59,22 +59,19 @@ for i in range(len(data)):
 	stdout, stderr = p.communicate()
 	out = stdout.decode("utf-8")
 	print(uname + " " + out[9:].rstrip('\n'))
-	out = out[9+27:]
-	#print(out.split(','))
-	y = out.count('Y,')+out.count('0,')
-	n = out.count('N,')
-	if y == 5 and n == 0:
-		countP += 1
-	if n == 5:
+	out = out[9+28:].strip('\n').split(',')
+	if out[0].count('N') > 0:
 		countM += 1
-	ans = out.split(',');
-	if len(ans)>1:
-		if ans[3].count('Y') > 0: # compiles?
+	if len(out) > 5:
+		if out[5].count('Y') > 0:
+			countW += 1
+	if len(out) > 4:
+		if out[4].count('Y') > 0:
 			countC += 1
-		#if ans[3].count('Y') > 0: # works?
-		#	countW += 1
-
+	if len(out) > 6:
+		if out[6].count('5') > 0:
+			countP += 1
 print(str(countM) + " students have no solution" )
 print(str(countC) + " students have a compiling solution" )
-#print(str(countW) + " students have a working solution" )
+print(str(countW) + " students have a working solution" )
 print(str(countP) + " students have a perfect solution" )
