@@ -71,7 +71,7 @@ for i in range(len(data)):
 	if len(ans)>1:
 		if ans[3].count('Y') > 0: # compiles?
 			countC += 1
-		#if ans[3].count('Y') > 0: # works?		
+		#if ans[3].count('Y') > 0: # works?
 		#	countW += 1
 
 print(str(countM) + " students have no solution" )

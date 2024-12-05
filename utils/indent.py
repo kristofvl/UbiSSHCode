@@ -36,8 +36,13 @@ for l in lines:
 	ll = "".join(l)
 	numSpaces = len(ll) - len(ll.lstrip())
 	if "}" in ll:  # do we have a block end
-		n = n - 2
-		extra = 0
+		if "{" in ll:
+			if ll.index('{') > ll.index('}'):
+				n = n- 2
+				extra = 0
+		else:
+			n = n - 2
+			extra = 0
 	if "/*" in ll:
 		comment = True
 	if ll.lstrip().startswith("//"):
@@ -45,7 +50,8 @@ for l in lines:
 	if any(x in ll for x in ["private:", "protected:", "public:"]):
 		n = 1
 	if "case " in ll or "default" in ll:
-		extra = 0
+		if not comment and not commentline:
+			extra = 0
 	# don't complain about empty lines:
 	lineLen = len(ll.lstrip())
 	if numSpaces != (n+extra) and not comment and lineLen > 0 and not commentline:
@@ -55,13 +61,15 @@ for l in lines:
 		else:
 			line = RED+("_" * numSpaces)+NC+line
 		out += BOLD+"{:03d}".format(ln)+NC+": "+line+"  "
-		out += RED+" Expected "+str(n)+" spaces, found "+str(numSpaces)+NC
+		out += RED+" Expected "+str(n+extra)+" spaces, found "+str(numSpaces)+NC
 		out += "\n"
 	# adjust expected spaces for case:
 	if "case " in ll and not "break" in ll:
-		extra = ll.rfind(":")+2-n
+		if not comment and not commentline:
+			extra = ll.rfind(":")+2-n
 	if "default " in ll and not "break" in ll:
-		extra = ll.rfind(":")+2-n
+		if not comment and not commentline:
+			extra = ll.rfind(":")+2-n
 	# for if statements without {}
 	if goback:
 		n = n - 2
@@ -73,7 +81,11 @@ for l in lines:
 		n = n + 2
 		goback = True
 	if "{" in ll:  # do we have a block start
-		n = n + 2
+		if "}" in ll:
+			if ll.index('{') > ll.index('}'):
+				n = n + 2
+		else:
+			n = n + 2
 	if "*/" in ll:
 		comment = False
 	if any(x in ll for x in ["private:", "protected:", "public:"]):

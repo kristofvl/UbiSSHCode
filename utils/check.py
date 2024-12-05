@@ -94,7 +94,7 @@ for i in range(len(adata[0])):
 		out = "\u2502 " + file + " "
 		out += (GREEN+"exists.   "+NC) if file_exists else (RED+"not found."+NC)
 		print(out+" "*(60-len(file))+"\u2502")
-	out += (GREEN+"  Y,"+NC) if file_exists else (RED+"  N,"+NC)
+	out += ("  "+GREEN+"Y"+NC+",") if file_exists else ("  "+RED+"N"+NC+",")
 
 	# header check:
 	if file_exists:
@@ -106,7 +106,7 @@ for i in range(len(adata[0])):
 		if headr_nm and headr_id:
 			if verbose:
 				print("\u2502 header is "+GREEN+"fine"+NC+" "*57+"\u2502")
-			out += GREEN+"  Y,"+NC
+			out += "  "+GREEN+"Y"+NC+","
 		else:
 			if verbose:
 				out = "\u2502 header is "+RED+"missing "
@@ -117,8 +117,8 @@ for i in range(len(adata[0])):
 				out += " "*(84-len(out))+"\u2502"
 				print(out)
 			points = points - 1
-			out += RED+"  N,"+NC
-	else: out += RED+"  N,"+NC
+			out += "  "+RED+"N"+NC+","
+	else: out += "  "+RED+"N"+NC+","
 
 	# indent check:
 	if file_exists:
@@ -136,8 +136,8 @@ for i in range(len(adata[0])):
 		else:
 			if verbose:
 				print("\u2502 indent warnings: "+GREEN+"0"+NC+" "*53+"\u2502")
-			out += GREEN+"   0,"+NC
-	else: out += RED+"   N,"+NC
+			out += "   "+GREEN+"0"+NC+","
+	else: out += "   "+RED+"N"+NC+","
 
 	# cpplint check:
 	if file_exists:
@@ -159,8 +159,8 @@ for i in range(len(adata[0])):
 		else:
 			if verbose:
 				print("\u2502 CPPLint errors: "+GREEN+"0"+NC+" "*54+"\u2502")
-			out += GREEN+"   0,"+NC
-	else: out += RED+"   N,"+NC
+			out += "   "+GREEN+"0"+NC+","
+	else: out += "   "+RED+"N"+NC+","
 
 	# compile check:
 	if file_exists:
@@ -168,14 +168,14 @@ for i in range(len(adata[0])):
 		stdout, stderr = p.communicate()
 		if len(stderr) < 1:
 			if verbose: print("\u2502 compiles "+GREEN+"fine"+NC+" "*58+"\u2502")
-			out += GREEN+"  Y,"+NC
+			out += "  "+GREEN+"Y"+NC+","
 		else:
-			if verbose: print("\u2502"+RED+" doesn't compile"+NC+" "+58+"\u2502")
-			out += RED+"  N,"+NC
+			if verbose: print("\u2502"+RED+" doesn't compile"+NC+" "*58+"\u2502")
+			out += "  "+RED+"N"+NC+","
 		# remove compiled file:
 		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 		stdout, stderr = p.communicate()
-	else: out += RED+"  N,"+NC
+	else: out += "  "+RED+"N"+NC+","
 
 # the last compile file is now tested:
 if os.path.isfile(file):
@@ -188,7 +188,8 @@ if os.path.isfile(file):
 		inStr = re.findall(r'"([^"]*)"', tst[0])[0]
 		outStr = re.findall(r'"([^"]*)"', tst[1])[0]
 		try:
-			p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, executable="/bin/bash")
+			p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'],
+				stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, executable="/bin/bash")
 			stdout, stderr = p.communicate()
 			#print(stdout)
 		# This will still result in Traceback, need to avoid this:
@@ -198,30 +199,30 @@ if os.path.isfile(file):
 		if outStr in str(stdout):
 			tsts = tsts - 1
 	if tsts == 0:
-		out += GREEN+"   Y"+NC
+		out += "  "+GREEN+"Y"+NC
 		if verbose:
-			print("\u2502 assignment "+GREEN+"is solved"+NC+" "*51+"\u2502")
-			points = points + 5;
+			print("\u2502 assignment "+GREEN+"is solved \U0001F600"+NC+" "*49+"\u2502")
+		points = points + 5;
 	else:
-		out += RED+"   N"+NC
+		out += "  "+RED+"N"+NC
 		if verbose:
 			print("\u2502 assignment "+RED+"is not fully solved yet"+NC+" "*37+"\u2502")
 else:
 	if verbose:
 		print("\u2502 compiled file "+RED+"not found"+NC+" "*48+"\u2502")
 	else:
-		out += RED+"   N"+NC
+		out += "  "+RED+"N"+NC
 
 # remove compiled file:
 p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 stdout, stderr = p.communicate()
 
+if points < 0:
+	points = 0
+
 # print to console:
 if not verbose:
-	print(out)
+	print(out+",   "+str(points))
 else:
 	print("\u2514"+"\u2500"*72+"\u2518\n")
 
-if points < 0:
-	points = 0
-exit(points)
