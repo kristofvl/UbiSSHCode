@@ -87,8 +87,8 @@ points = 0
 #with these files, check these:
 for i in range(len(adata[0])):
 	if verbose:
-		print("\u2502Target:   "+str(adata[i][0])+" "*(62-len(adata[i][0]))+"\u2502")
-	file = pth+"/"+adata[i][0]
+		print("\u2502Target:   "+str(adata[0][i])+" "*(62-len(adata[0][i]))+"\u2502")
+	file = pth+"/"+adata[0][i]
 	file_exists = os.path.isfile(file)
 	if verbose:
 		out = "\u2502 " + file + " "
@@ -177,48 +177,64 @@ for i in range(len(adata[0])):
 		stdout, stderr = p.communicate()
 	else: out += "  "+RED+"N"+NC+","
 
-# the last compile file is now tested:
+# the whole project is now tested:
 if os.path.isfile(file):
-	p = Popen(['g++', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
+	projFiles = "";
+	for f in adata[0]:
+		if not f.endswith(".h"):
+			projFiles += " "+pth+"/"+f
+	p = Popen(['g++'+projFiles+' -o'+randfile], stdout=PIPE, stderr=PIPE, shell=True,
+		executable="/bin/bash")
 	stdout, stderr = p.communicate()
 	tsts = len(adata[1:])
 	#with these files, check these:
 	for tst in adata[1:]:
-		inStr = tst[0].replace('\\\\','\\')
-		inStr = re.findall(r'"([^"]*)"', tst[0])[0]
-		outStr = re.findall(r'"([^"]*)"', tst[1])[0]
+		inStr = tst[0].replace('\\\\','\\')            #
+		inStr = re.findall(r'"([^"]*)"', tst[0])[0]    # get string within double quotes
+		outStr = re.findall(r'"([^"]*)"', tst[1])[0]   # get string within double quotes
+		andTests = True
+		if len(tst)>2:
+			if tst[2] == "or":
+				andTests = False
 		try:
+			# we restrict the compiled file to be ran within 3 seconds and 1k of memory use
 			p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'],
 				stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, executable="/bin/bash")
 			stdout, stderr = p.communicate()
-			#print(stdout)
+			#get the output of the compiled file for analysis --- print(stdout)
 		# This will still result in Traceback, need to avoid this:
 		except MemoryError as err:
 			if verbose:
-				print(" executable did not end when tested.")
-		if outStr in str(stdout):
-			tsts = tsts - 1
+				print("Executable did not end when tested.")
+		if outStr in str(stdout).lower():
+			if andTests: tsts = tsts - 1
+			else: tsts = 0
+		#	print("ok")
+		#else:
+		#	print("failed on "+str(stdout)+" "+inStr)
 	if tsts == 0:
 		out += "  "+GREEN+"Y"+NC
 		if verbose:
-			print("\u2502 assignment "+GREEN+"is solved \U0001F600"+NC+" "*49+"\u2502")
+			print("\u2502Assignment "+GREEN+"is solved \u263A"+NC+" "*50+"\u2502")
+			#\U0001F44D\U0001F600"+NC+" "*46+"\u2502")
 		points = points + 5;
 	else:
 		out += "  "+RED+"N"+NC
 		if verbose:
-			print("\u2502 assignment "+RED+"is not fully solved yet"+NC+" "*37+"\u2502")
+			print("\u2502Assignment "+RED+"is not fully solved yet"+NC+" "*38+"\u2502")
 else:
 	if verbose:
-		print("\u2502 compiled file "+RED+"not found"+NC+" "*48+"\u2502")
+		print("\u2502Compiled file "+RED+"not found"+NC+" "*49+"\u2502")
 	else:
 		out += "  "+RED+"N"+NC
+
+# negative points -> zero
+if points < 0:
+	points = 0
 
 # remove compiled file:
 p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 stdout, stderr = p.communicate()
-
-if points < 0:
-	points = 0
 
 # print to console:
 if not verbose:
