@@ -204,8 +204,7 @@ if os.path.isfile(file):
 			#get the output of the compiled file for analysis --- print(stdout)
 		# This will still result in Traceback, need to avoid this:
 		except MemoryError as err:
-			if verbose:
-				print("Executable did not end when tested.")
+			if verbose: print("Executable did not end when tested.")
 		if outStr in str(stdout).lower():
 			if andTests: tsts = tsts - 1
 			else: tsts = 0
@@ -229,16 +228,13 @@ else:
 		out += "  "+RED+"N"+NC
 
 # negative points -> zero
-if points < 0:
-	points = 0
+if points < 0: points = 0
 
 # remove compiled file:
 p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 stdout, stderr = p.communicate()
 
 # print to console:
-if not verbose:
-	print(out+",   "+str(points))
-else:
-	print("\u2514"+"\u2500"*72+"\u2518\n")
+if not verbose: print(out+",   "+str(points))
+else: print("\u2514"+"\u2500"*72+"\u2518\n")
 
