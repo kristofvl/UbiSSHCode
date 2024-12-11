@@ -6,9 +6,9 @@ import os
 import re
 from shutil import get_terminal_size
 from random import randrange
-#print(get_terminal_size()[0])
-#from pathlib import Path
+#print(get_terminal_size()[0])  # ToDo: resize box according to terminal width?
 
+#for using colors in terminal: 
 RED='\033[0;31m'
 NC='\033[0m'
 GREEN='\033[32;1m'
@@ -186,8 +186,8 @@ if os.path.isfile(file):
 	p = Popen(['g++'+projFiles+' -o'+randfile], stdout=PIPE, stderr=PIPE, shell=True,
 		executable="/bin/bash")
 	stdout, stderr = p.communicate()
-	numTsts = len(adata[1:])
-	success = 0
+	numTsts = len(adata[1:])  # the lines are the number of tests
+	success = 0  # and initially, all need to succeed (unless we have 'or's)
 	#with these files, check these:
 	for tst in adata[1:]:
 		if "file:" in tst[0]:
@@ -199,7 +199,7 @@ if os.path.isfile(file):
 				if searchString in open(checkFile).read():
 					success += 1
 		elif "in:" in tst[0]:
-			inStr = tst[0].replace('\\\\','\\')            #
+			inStr = tst[0].replace('\\\\','\\')            # inputs need to preserve '\n's 
 			inStr = re.findall(r'"([^"]*)"', tst[0])[0]    # get string within double quotes
 			outStr = re.findall(r'"([^"]*)"', tst[1])[0]   # get string within double quotes
 			andTests = True
