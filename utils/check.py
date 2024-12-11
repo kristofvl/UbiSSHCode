@@ -238,16 +238,13 @@ else:
 		out += "  "+RED+"N"+NC
 
 # negative points -> zero
-if points < 0:
-	points = 0
+if points < 0: points = 0
 
 # remove compiled file:
 p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
 stdout, stderr = p.communicate()
 
 # print to console:
-if not verbose:
-	print(out+",   "+str(points))
-else:
-	print("\u2514"+"\u2500"*72+"\u2518\n")
+if not verbose: print(out+",   "+str(points))
+else: print("\u2514"+"\u2500"*72+"\u2518\n")
 
