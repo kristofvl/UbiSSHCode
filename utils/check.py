@@ -186,33 +186,42 @@ if os.path.isfile(file):
 	p = Popen(['g++'+projFiles+' -o'+randfile], stdout=PIPE, stderr=PIPE, shell=True,
 		executable="/bin/bash")
 	stdout, stderr = p.communicate()
-	tsts = len(adata[1:])
+	numTsts = len(adata[1:])
+	success = 0
 	#with these files, check these:
 	for tst in adata[1:]:
-		inStr = tst[0].replace('\\\\','\\')            #
-		inStr = re.findall(r'"([^"]*)"', tst[0])[0]    # get string within double quotes
-		outStr = re.findall(r'"([^"]*)"', tst[1])[0]   # get string within double quotes
-		andTests = True
-		if len(tst)>2:
-			if tst[2] == "or":
-				andTests = False
-		try:
-			# we restrict the compiled file to be ran within 3 seconds and 1k of memory use
-			p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'],
-				stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, executable="/bin/bash")
-			stdout, stderr = p.communicate()
-			#get the output of the compiled file for analysis --- print(stdout)
-		# This will still result in Traceback, need to avoid this:
-		except MemoryError as err:
-			if verbose:
-				print("Executable did not end when tested.")
-		if outStr in str(stdout).lower():
-			if andTests: tsts = tsts - 1
-			else: tsts = 0
-		#	print("ok")
-		#else:
-		#	print("failed on "+str(stdout)+" "+inStr)
-	if tsts == 0:
+		if "file:" in tst[0]:
+			# check whether contents are in the specified file
+			checkFile = pth+"/"+re.findall(r'"([^"]*)"', tst[0])[0];
+			if os.path.isfile( checkFile ):
+				#open file and search for string
+				searchString = re.findall(r'"([^"]*)"', tst[1])[0]
+				if searchString in open(checkFile).read():
+					success += 1
+		elif "in:" in tst[0]:
+			inStr = tst[0].replace('\\\\','\\')            #
+			inStr = re.findall(r'"([^"]*)"', tst[0])[0]    # get string within double quotes
+			outStr = re.findall(r'"([^"]*)"', tst[1])[0]   # get string within double quotes
+			andTests = True
+			if len(tst)>2:
+				if tst[2] == "or":
+					andTests = False
+			try:
+				# we restrict the compiled file to be ran within 3 seconds and 1k of memory use
+				p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'],
+					stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, executable="/bin/bash")
+				stdout, stderr = p.communicate()
+				#get the output of the compiled file for analysis --- print(stdout)
+			# This will still result in Traceback, need to avoid this:
+			except MemoryError as err:
+				if verbose:
+					print("Executable did not end when tested.")
+			if outStr in str(stdout).lower():
+				success += 1
+			else:
+				if not andTests: numTsts -= 1
+
+	if success == numTsts:
 		out += "  "+GREEN+"Y"+NC
 		if verbose:
 			print("\u2502Assignment "+GREEN+"is solved \u263A"+NC+" "*50+"\u2502")
