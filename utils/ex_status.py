@@ -6,7 +6,8 @@ import os
 from pathlib import Path
 
 if len(sys.argv) < 2:
-	print("please provide an exercise")
+	print("Please provide an exercise. Usage:")
+	print("ex_status [exerciseID] <csv_file|v(erbose)> <column>")
 	exit(0)
 else:
 	ename = sys.argv[1]
