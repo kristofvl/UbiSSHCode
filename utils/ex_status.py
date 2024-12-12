@@ -36,10 +36,13 @@ countW = 0 # working solutions
 countC = 0 # compiling solutions
 
 # open moodle csv file for marking:
+csvField = -1
 if len(sys.argv) > 2:
 	r = csv.reader( open(sys.argv[2]) )
 	lines = list(r)
-	print(lines[1][0]+lines[1][1])
+	if len(sys.argv) > 3:
+		csvField = int(sys.argv[3])
+		print("scores go to "+lines[0][csvField])
 
 for i in range(len(data)):
 	if len(data[i]) == 4:
@@ -71,14 +74,14 @@ for i in range(len(data)):
 	if out[0].count('N') > 0:
 		countM += 1
 	if len(out) > 5:
-		if out[5].count('Y') > 0:
+		if out[-2].count('Y') > 0:
 			countW += 1
 	if len(out) > 4:
-		if out[4].count('Y') > 0:
+		if out[-3].count('Y') > 0:
 			countC += 1
 	if len(out) > 6:
-		score = float(out[6].lstrip(' '))
-		if score ==5:
+		score = float(out[-1].lstrip(' '))
+		if score == 5:
 			countP += 1
 
 	#find student in csv:
@@ -96,6 +99,7 @@ print(str(countC) + " students have a compiling solution" )
 print(str(countW) + " students have a working solution" )
 print(str(countP) + " students have a perfect solution" )
 
-with open('intro.csv', 'w', newline='', encoding='utf-8') as f:
-	w = csv.writer(f)
-	w.writerows(lines)
+if len(sys.argv) > 2:
+	with open('intro.csv', 'w', newline='', encoding='utf-8') as f:
+		w = csv.writer(f)
+		w.writerows(lines)

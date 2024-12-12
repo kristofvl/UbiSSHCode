@@ -170,7 +170,7 @@ for i in range(len(adata[0])):
 			if verbose: print("\u2502 compiles "+GREEN+"fine"+NC+" "*58+"\u2502")
 			out += "  "+GREEN+"Y"+NC+","
 		else:
-			if verbose: print("\u2502"+RED+" doesn't compile"+NC+" "*58+"\u2502")
+			if verbose: print("\u2502"+RED+" doesn't compile"+NC+" "*56+"\u2502")
 			out += "  "+RED+"N"+NC+","
 		# remove compiled file:
 		p = Popen(['/usr/bin/rm', randfile], stdout=PIPE, stderr=PIPE)
