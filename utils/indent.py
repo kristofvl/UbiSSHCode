@@ -31,11 +31,21 @@ ln = 1
 comment = False
 commentline = False
 goback = False
+inSwitch = False
 extra = 0
 for l in lines:
 	ll = "".join(l)
 	numSpaces = len(ll) - len(ll.lstrip())
-	if "}" in ll:  # do we have a block end
+	if ll.lstrip().startswith("//"):
+		commentline = True
+	# now strip away the comments to avoid detecting keywords there:
+	commentIndx = ll.find("//")
+	if commentIndx != -1: ll = ll[:ll.find("//")]
+	# multi-line comments should not be checked:
+	if "/*" in ll:
+		comment = True
+	# do we have a block end?
+	if "}" in ll:
 		if "{" in ll:
 			if ll.index('{') > ll.index('}'):
 				n = n- 2
@@ -43,18 +53,19 @@ for l in lines:
 		else:
 			n = n - 2
 			extra = 0
-	if "/*" in ll:
-		comment = True
-	if ll.lstrip().startswith("//"):
-		commentline = True
+			inSwitch = False
 	if any(x in ll for x in ["private:", "protected:", "public:"]):
 		n = 1
 	if "case " in ll or "default" in ll:
 		if not comment and not commentline:
 			extra = 0
+			inSwitch = True
 	# don't complain about empty lines:
 	lineLen = len(ll.lstrip())
+	# if not the exact same nuber of spaces to n+extra, we have an error:
 	if numSpaces != (n+extra) and not comment and lineLen > 0 and not commentline:
+		if numSpaces == (n+2):  # after a case we can also allow a 2-space indent
+			break
 		line = (ll.ljust(32))[0:32].lstrip(' ')
 		if n <= numSpaces:
 			line = GREEN+("_"*n)+RED+("_"*(numSpaces-n))+NC+line
