@@ -30,6 +30,10 @@ ename = subs[-1]  # last dir should be the exercise ID
 #if verbose:
 #	print("checking "+ename+" in "+str(subs))
 
+vverb = False
+if len(sys.argv) > 3:
+	if sys.argv[3] == 'v': vverb = True
+
 if len(subs)<4 or not ename.startswith("ex"):
 	print("Error: You are not in a correct exercise directory.")
 	print(" (You are in " + pth + ")")
@@ -198,6 +202,9 @@ if os.path.isfile(file):
 				searchString = re.findall(r'"([^"]*)"', tst[1])[0]
 				if searchString in open(checkFile).read():
 					success += 1
+					if vverb: print("file ok "+str(success)+" "+str(numTsts))
+				else:
+					if vverb: print("file nok "+str(success)+" "+str(numTsts))
 		elif "in:" in tst[0]:
 			inStr = tst[0].replace('\\\\','\\')            # inputs need to preserve '\n's 
 			inStr = re.findall(r'"([^"]*)"', tst[0])[0]    # get string within double quotes
@@ -218,8 +225,10 @@ if os.path.isfile(file):
 					print("Executable did not end when tested.")
 			if outStr in str(stdout).lower():
 				success += 1
+				if vverb: print("io ok"+str(success)+" "+str(numTsts))
 			else:
 				if not andTests: numTsts -= 1
+				if vverb: print("io nok"+str(success)+" "+str(numTsts))
 
 	if success == numTsts:
 		out += "  "+GREEN+"Y"+NC

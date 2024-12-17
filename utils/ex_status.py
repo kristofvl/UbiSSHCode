@@ -7,7 +7,7 @@ from pathlib import Path
 
 if len(sys.argv) < 2:
 	print("Please provide an exercise. Usage:")
-	print("ex_status [exerciseID] <csv_file|v(erbose)> <column>")
+	print("ex_status [exerciseID] <in_csv_file|v(erbose)> <column> <out_csv_file>")
 	exit(0)
 else:
 	ename = sys.argv[1]
@@ -86,12 +86,14 @@ for i in range(len(data)):
 			countP += 1
 
 	#find student in csv:
-	if len(sys.argv) > 2:
+	if csvField:
 		personFound = False
 		for row in lines:
 			if row[0]==frstn and row[1]==lastn:
 				personFound = True
-				row[9]="{:.2f}".format(score)
+				if "-" in row[csvField]: oldScore = 0;
+				else: oldScore = float(row[csvField])
+				row[csvField] = "{:.2f}".format(oldScore+score)
 		if not personFound:
 			print("?")
 
@@ -100,7 +102,7 @@ print(str(countC) + " students have a compiling solution" )
 print(str(countW) + " students have a working solution" )
 print(str(countP) + " students have a perfect solution" )
 
-if len(sys.argv) > 2:
-	with open('intro.csv', 'w', newline='', encoding='utf-8') as f:
+if len(sys.argv) > 4:
+	with open(sys.argv[4], 'w', newline='', encoding='utf-8') as f:
 		w = csv.writer(f)
 		w.writerows(lines)
