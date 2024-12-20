@@ -7,7 +7,7 @@ if [[ $EUID > 0 ]]
 fi
 
 if [ $# -eq 0 ] ; then
-    echo -e 'usage: '$0' <year> <ex> <list.txt>'
+    echo -e 'usage: sudo '$0' <year> <ex> <list.txt>'
     exit 1
 fi
 
@@ -17,11 +17,13 @@ ERRCOUNT=0
 ex=$2
 CSV=$3
 
+# kill all active processes of all students in <list.txt>:
 while IFS=',' read -r f1 f2
 do
 	pkill -u ${f1:10:22}
 done < "$CSV"
 
+# copy solutions in jplag directory, read-protect dir and files:
 for f in /home/st$1_*; do
 	if [ -d $f ]; then
       st_dir=${f##*/}

@@ -37,7 +37,7 @@ countW = 0 # working solutions
 countC = 0 # compiling solutions
 
 # open moodle csv file for marking:
-csvField = -1
+csvField = False
 if len(sys.argv) > 2:
 	r = csv.reader( open(sys.argv[2]) )
 	lines = list(r)
