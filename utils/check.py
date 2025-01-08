@@ -206,7 +206,7 @@ if os.path.isfile(file):
 				else:
 					if vverb: print("file nok "+str(success)+" "+str(numTsts))
 		elif "in:" in tst[0]:
-			inStr = tst[0].replace('\\\\','\\')            # inputs need to preserve '\n's 
+			inStr = tst[0].replace('\\\\','\\')            # inputs need to preserve '\n's
 			inStr = re.findall(r'"([^"]*)"', tst[0])[0]    # get string within double quotes
 			outStr = re.findall(r'"([^"]*)"', tst[1])[0]   # get string within double quotes
 			andTests = True

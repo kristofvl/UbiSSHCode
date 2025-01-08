@@ -85,7 +85,7 @@ for l in lines:
 	if goback:
 		n = n - 2
 		goback = False
-	if "if" in ll and not "{" in ll and not ";" in ll:
+	if "if" in ll and not "{" in ll and not ";" in ll and not comment and not commentline:
 		n = n + 2
 		goback = True
 	if "else" in ll and not "{" in ll and not ";" in ll:
