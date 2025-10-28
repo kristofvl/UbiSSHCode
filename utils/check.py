@@ -48,7 +48,7 @@ p = Popen([s], stdout=PIPE, stderr=PIPE, shell=True, executable="/bin/bash")
 stdout, stderr = p.communicate()
 outstr = stdout.decode('utf-8').strip('\n').strip('\r')
 if "," in outstr:
-	lastn, frstn = outstr.split(',')
+	lastn, frstn = outstr.split(',',1)  # split first name and second name
 else:
 	lastn = outstr; frstn = ""
 names = outstr.strip(',').split()
