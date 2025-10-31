@@ -27,8 +27,6 @@ else:
 	verbose = True
 subs = pth.split('/')
 ename = subs[-1]  # last dir should be the exercise ID
-#if verbose:
-#	print("checking "+ename+" in "+str(subs))
 
 vverb = False
 if len(sys.argv) > 3:
@@ -215,8 +213,8 @@ if os.path.isfile(file):
 					andTests = False
 			try:
 				# we restrict the compiled file to be ran within 3 seconds and 1k of memory use
-				p = Popen(['echo \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'],
-					stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, executable="/bin/bash")
+				p = Popen(['echo -e \"'+inStr+'\" | timeout 3s '+randfile+' | head -c 1k'],
+					stdout=PIPE, stderr=PIPE, shell=True, executable="/bin/bash")
 				stdout, stderr = p.communicate()
 				#get the output of the compiled file for analysis --- print(stdout)
 			# This will still result in Traceback, need to avoid this:
@@ -228,7 +226,7 @@ if os.path.isfile(file):
 				if vverb: print("io ok"+str(success)+" "+str(numTsts))
 			else:
 				if not andTests: numTsts -= 1
-				if vverb: print("io nok"+str(success)+" "+str(numTsts))
+				if vverb: print("io nok:"+str(success)+" "+str(numTsts)+" "+inStr+" "+outStr+" "+str(stdout).lower())
 
 	if success == numTsts:
 		out += "  "+GREEN+"Y"+NC
