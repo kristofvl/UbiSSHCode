@@ -253,5 +253,7 @@ stdout, stderr = p.communicate()
 
 # print to console:
 if not verbose: print(out+",   "+str(points))
-else: print("\u2514"+"\u2500"*72+"\u2518\n")
+else:
+	print("\u2502Your mark for this exercise: "+str(points)+" points"+" "*35+"\u2502")
+	print("\u2514"+"\u2500"*72+"\u2518\n")  # last line of box
 
