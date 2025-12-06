@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+# to get verbose output:
+# /home/kvl/UbiSSHCode/utils/check.py /home/st2025_1234567/ex021/ 1 v
+
 import sys
 import csv
 from subprocess import Popen, PIPE
@@ -8,7 +12,7 @@ from shutil import get_terminal_size
 from random import randrange
 #print(get_terminal_size()[0])  # ToDo: resize box according to terminal width?
 
-#for using colors in terminal: 
+#for using colors in terminal:
 RED='\033[0;31m'
 NC='\033[0m'
 GREEN='\033[32;1m'
@@ -46,7 +50,7 @@ p = Popen([s], stdout=PIPE, stderr=PIPE, shell=True, executable="/bin/bash")
 stdout, stderr = p.communicate()
 outstr = stdout.decode('utf-8').strip('\n').strip('\r')
 if "," in outstr:
-	lastn, frstn = outstr.split(',',1)  # split first name and second name
+	lastn, frstn = outstr.split(',')
 else:
 	lastn = outstr; frstn = ""
 names = outstr.strip(',').split()
@@ -58,7 +62,7 @@ try:
 	if verbose:
 		#out = "\u259B"+"\u2580"*72+"\u259C"
 		out = "\u250C"+"\u2500"*72+"\u2510"
-		out += "\n\u2502Checking: " + ename + " "*57 + "\u2502\n" 
+		out += "\n\u2502Checking: " + ename + " "*57 + "\u2502\n"
 		out += "\u2502Author:  " + frstn + " " + lastn + " "*(62-len(frstn)-len(lastn)) + "\u2502\n"
 		out += "\u2502User ID:  " + uname + " "*48 + "\u2502"
 		print(out)
@@ -92,14 +96,19 @@ for i in range(len(adata[0])):
 		print("\u2502Target:   "+str(adata[0][i])+" "*(62-len(adata[0][i]))+"\u2502")
 	file = pth+"/"+adata[0][i]
 	file_exists = os.path.isfile(file)
+	file_readable = os.access(file, os.R_OK)
 	if verbose:
 		out = "\u2502 " + file + " "
-		out += (GREEN+"exists.   "+NC) if file_exists else (RED+"not found."+NC)
-		print(out+" "*(60-len(file))+"\u2502")
-	out += ("  "+GREEN+"Y"+NC+",") if file_exists else ("  "+RED+"N"+NC+",")
+		if not file_exists:     out += (RED  +"not found.   "+NC)
+		elif not file_readable: out += (ORANGE+"not readable."+NC)
+		else:                   out += (GREEN+"exists.      "+NC)
+		print(out+" "*(57-len(file))+"\u2502")
+	if not file_exists:     out += ("  "+RED+"N"+NC+",")
+	elif not file_readable: out += ("  "+ORANGE+"X"+NC+",")
+	else:                   out += ("  "+GREEN+"Y"+NC+",")
 
 	# header check:
-	if file_exists:
+	if file_exists and file_readable:
 		with open( file ) as f:
 			code = f.read()
 		headr = code.partition('/*')[2].partition('*/')[0]
@@ -123,7 +132,7 @@ for i in range(len(adata[0])):
 	else: out += "  "+RED+"N"+NC+","
 
 	# indent check:
-	if file_exists:
+	if file_exists and file_readable:
 		p = Popen(['indent', file], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		stdout = str(stdout.decode('utf-8')).split("\n");
@@ -142,7 +151,7 @@ for i in range(len(adata[0])):
 	else: out += "   "+RED+"N"+NC+","
 
 	# cpplint check:
-	if file_exists:
+	if file_exists and file_readable:
 		p = Popen(['cpplint', file], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		stdout = str(stdout.decode('utf-8')).split("\n");
@@ -165,7 +174,7 @@ for i in range(len(adata[0])):
 	else: out += "   "+RED+"N"+NC+","
 
 	# compile check:
-	if file_exists:
+	if file_exists and file_readable:
 		p = Popen(['/usr/bin/g++', '-c', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		if len(stderr) < 1:
@@ -223,7 +232,7 @@ if os.path.isfile(file):
 					print("Executable did not end when tested.")
 			if outStr in str(stdout).lower():
 				success += 1
-				if vverb: print("io ok"+str(success)+" "+str(numTsts))
+				if vverb: print("io ok:"+str(success)+" "+str(numTsts))
 			else:
 				if not andTests: numTsts -= 1
 				if vverb: print("io nok:"+str(success)+" "+str(numTsts)+" "+inStr+" "+outStr+" "+str(stdout).lower())
@@ -254,6 +263,5 @@ stdout, stderr = p.communicate()
 # print to console:
 if not verbose: print(out+",   "+str(points))
 else:
-	print("\u2502Your mark for this exercise: "+str(points)+" points"+" "*35+"\u2502")
+	print("\u2502Your mark for this exercise: "+BOLD+str(points)+NC+" points"+" "*35+"\u2502")
 	print("\u2514"+"\u2500"*72+"\u2518\n")  # last line of box
-
