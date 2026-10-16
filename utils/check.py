@@ -133,7 +133,7 @@ for i in range(len(adata[0])):
 
 	# indent check:
 	if file_exists and file_readable:
-		p = Popen(['indent', file], stdout=PIPE, stderr=PIPE, cwd=here)
+		p = Popen(['indent', file, '-o', randfile], stdout=PIPE, stderr=PIPE, cwd=here)
 		stdout, stderr = p.communicate()
 		stdout = str(stdout.decode('utf-8')).split("\n");
 		if len(stdout) > 2:
